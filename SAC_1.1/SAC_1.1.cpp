@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-Written by ¯yvind KolŒs pippin@gimp.org in 2013, based around a core of
+Written by ï¿½yvind Kolï¿½s pippin@gimp.org in 2013, based around a core of
 sensor initialization and reading by by Andres Orencio Ramirez Perez
 andy@orencio.org
 
@@ -40,6 +40,7 @@ and Adrian from Artesanos Industriales del Sur.
 #define BUTTON_UP_PIN 9
 #define BUTTON_ENTER_PIN 8
 #define BUTTON_DOWN_PIN 7
+
 
 //The setup function is called once at startup of the sketch
 void setup()
