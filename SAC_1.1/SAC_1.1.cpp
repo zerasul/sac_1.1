@@ -38,6 +38,9 @@ and Adrian from Artesanos Industriales del Sur.
 #include "SoftwareSerial.h"
 #include "serLCD.h"
 #include "EEPROMUtils.h"
+#include "serLCDUtils.h"
+#include "sac_sensors.h"
+
 #define RELAY_1_PIN 5
 #define RELAY_2_PIN 6
 #define RELAY_3_PIN 4
@@ -63,8 +66,7 @@ and Adrian from Artesanos Industriales del Sur.
 #define soil_moisture_MIN 45
 #define soil_moisture_MAX 80
 
-// Pin for air humdity and temperature sensor (AHTS).
-#define AHTS_PIN A0
+
 
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2

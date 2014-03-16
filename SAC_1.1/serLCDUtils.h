@@ -5,7 +5,10 @@
  *      Author: dcuevas
  */
 #include "serLCD.h"
-serLCD seriallcd(11);
+
+#define LCD_PIN 11
+
+serLCD seriallcd(LCD_PIN);
 
 //NUEVA LIBRERIA LCD CON FUNCIONES PREDEFINIDAS
 //
