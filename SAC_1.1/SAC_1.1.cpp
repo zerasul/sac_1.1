@@ -41,6 +41,11 @@ and Adrian from Artesanos Industriales del Sur.
 #define BUTTON_ENTER_PIN 8
 #define BUTTON_DOWN_PIN 7
 
+#define LOOP_DELAY    500
+#define MENU_SPEEDUP  3
+#define MENU_TIMEOUT  120
+
+#define SOIL_MOISTURE_POWER_PIN 3
 
 /* distance between datalog entries in minutes */
 #define LOG_INTERVAL 60
