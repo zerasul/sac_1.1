@@ -149,3 +149,87 @@ void backlight()
     clearScreen();
   }
 }
+
+/*Menus*/
+
+MenuItem relay_menu[] = {
+  {S_RELAY1, S_EMPTY, ROLE, &relay[0].role},
+  {S_RELAY2, S_EMPTY, ROLE, &relay[1].role},
+  {S_RELAY3, S_EMPTY, ROLE, &relay[2].role},
+  {S_RETURN_TO, S_MAIN_MENU,       BACK, 0},
+  {0}
+};
+
+int minutes = 0;
+
+#define MAX_MENU_DEPTH 4
+
+MenuItem *prev_menu[MAX_MENU_DEPTH];
+int       prev_menu_active[MAX_MENU_DEPTH];
+int       menu_depth = 0;
+
+MenuItem log_menu[] =
+{
+  {S_LOG, 0, LOG, },
+  {S_RETURN_TO, S_MAIN_MENU,       BACK, 0},
+  {0}
+};
+
+MenuItem main_menu[] = {
+  {S_A, 0,                           STATUS,              (void*)0},
+  {S_RELAYS, S_CONFIG,               SUBMENU,             &relay_menu},
+  {S_SOIL_MOISTURE, 0,               NUMBER,              &moisture_target},
+  {S_IRRIGATION_CYCLE, S_LENGTH_SEC, NUMBER,              &pump_cycle_length},
+  {S_CALIBRATE_MOIST, 0,             SOIL_CALIBRATE,      &moisture_calib},
+  {S_AIR_HUMIDITY, 0,                NUMBER,              &humidity_target},
+  {S_AIR_TEMPERATURE, 0,             NUMBER,              &temperature_target},
+  {S_LIGHT,  S_START,                TIME,                &lights_start[0]},
+  {S_LIGHT,  S_DURATION,             TIME,                &lights_duration[0]},
+  {S_TIME, 0,                        TIME,                &minutes},
+  {S_LANGUAGE, 0,                    LANGUAGE,            &active_language},
+/*{S_RESET, S_CONFIG,                RESET_SETTINGS,      0},*/
+/*{S_LOG, 0,                         SUBMENU,             &log_menu},*/
+  {0}
+};
+
+enum {
+  IDLE = 0,
+  BUTTON_UP,
+  BUTTON_DOWN,
+  BUTTON_ENTER,
+  TIMEOUT
+};
+
+MenuItem * menu = &main_menu[0];
+int menu_active = 0;
+
+#define N_ELEM(array) (sizeof(array)/sizeof(array[0]))
+#define menu_c    N_ELEM(menu)
+#define roles_c   N_ELEM(roles)
+
+void enter_menu (MenuItem *new_menu)
+{
+  prev_menu[menu_depth] = menu;
+  prev_menu_active[menu_depth] = menu_active;
+  menu_depth++;
+  menu = new_menu;
+  menu_active = 0;
+  clearScreen();
+}
+
+void return_home (void)
+{
+  if (menu == main_menu && menu_active == 0)
+    return;
+  clearScreen();
+  menu = main_menu;
+  menu_active = 0;
+}
+
+void go_back (void)
+{
+  menu_depth--;
+  menu = prev_menu[menu_depth];
+  menu_active = prev_menu_active[menu_depth];
+  clearScreen();
+}
