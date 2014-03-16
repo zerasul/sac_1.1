@@ -87,9 +87,7 @@ int   cached_water_level = 1;
 
 static LogEntry datalog[24*60/LOG_INTERVAL];
 
-serLCD serialLcd(11);
 
-int lcd_initialized=0;
 
 
 Relay *find_relay (int role);
