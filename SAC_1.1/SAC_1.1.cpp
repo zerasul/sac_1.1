@@ -93,9 +93,9 @@ int lcd_initialized=0;
 
 
 //The setup function is called once at startup of the sketch
-void setup()
+void setup_arduino()
 {
-// Add your initialization code here
+
 	  // Initialize setup for AHTS.
 	  pinMode(AHTS_PIN, OUTPUT);
 	  // Initialize setup for WTS.
@@ -113,7 +113,9 @@ void setup()
 
 	  seriallcd.display();
 }
+void setup(){
 
+}
 // The loop function is called in an endless loop
 void loop()
 {
