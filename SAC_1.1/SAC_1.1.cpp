@@ -34,7 +34,7 @@ and Adrian from Artesanos Industriales del Sur.
 #include "SAC_1.1.h"
 #include "Var.h"
 #include "languages.h"
-
+#include "Arduino.h"
 #include "SoftwareSerial.h"
 #include "serLCD.h"
 #include "EEPROMUtils.h"
@@ -96,6 +96,22 @@ int lcd_initialized=0;
 void setup()
 {
 // Add your initialization code here
+	  // Initialize setup for AHTS.
+	  pinMode(AHTS_PIN, OUTPUT);
+	  // Initialize setup for WTS.
+	  pinMode(WTS_PIN, INPUT);
+	  // Initialize setup for relays.
+	  pinMode(RELAY1_PIN, OUTPUT);
+	  pinMode(RELAY2_PIN, OUTPUT);
+	  pinMode(RELAY3_PIN, OUTPUT);
+
+	  pinMode(SOIL_MOISTURE_POWER_PIN, OUTPUT);
+
+	  pinMode(BUTTON_UP_PIN, INPUT);
+	  pinMode(BUTTON_ENTER_PIN, INPUT);
+	  pinMode(BUTTON_DOWN_PIN, INPUT);
+
+	  seriallcd.display();
 }
 
 // The loop function is called in an endless loop
