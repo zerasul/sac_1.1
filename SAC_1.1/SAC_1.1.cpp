@@ -56,7 +56,7 @@ and Adrian from Artesanos Industriales del Sur.
 #define SOIL_MOISTURE_POWER_PIN 3
 
 #define MAX_RELAYS 4
-#define MAX_LIGHTS 1
+
 
 // Pin for soil moisture sensor (MOISTURE).
 // http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor
