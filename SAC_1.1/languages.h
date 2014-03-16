@@ -1,11 +1,15 @@
 /*
- * languages.h
+ * languages.h : File That contains all the Languaje Options for the Project SAC.
+ *  In this file contains all the Messages for Print in screen in 2 Languajes.
  *
  *  Created on: 16/03/2014
  *      Author: dcuevas
+ *      Collaborator: Victor Suarez<suarez.garcia.victor@gmail.com>
+ *
+ *   SAC: Version 1.1.
  */
 
-#define MAX_LANGUAGE 4
+#define MAX_LANGUAGE 2
 typedef struct TranslatedString {
   const char *languages[MAX_LANGUAGE];
 } TranslatedString;

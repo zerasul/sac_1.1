@@ -1,8 +1,10 @@
 /*
- * Var.h
+ * Var.h: This file contains all the variables for the correct functionality
+ * for the SAC Project.
  *
  *  Created on: 16/03/2014
- *      Author: victor
+ *      Author: victor Suarez<suarez.garcia.victor@gmail.com>
+ *      Co-Author: David Cuevas.
  */
 
 enum {
