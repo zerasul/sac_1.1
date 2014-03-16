@@ -11,6 +11,12 @@
 // Pin for air humdity and temperature sensor (AHTS).
 #define AHTS_PIN A0
 
+#define MOISTURE_SMOOTHING  85
+/*------------Global Variables-------------*/
+float moisture_calib       = 500;
+
+/*----------------------------------------*/
+
 // Function to read AHTS.
 unsigned char read_ahts_dat() {
   unsigned char i = 0;
@@ -86,4 +92,17 @@ void aths_read_data(float *hum_out, float *temp_out) {
 
   if (hum_out) *hum_out = humdity;
   if (temp_out) *temp_out = temperature;
+}
+
+float moisture_read()
+{
+  static float kept = 0;
+  float soil_moisture = cached_moisture * 100 / moisture_calib;
+  if (soil_moisture > 100)
+    {
+      soil_moisture = 100;
+    }
+  kept = (kept * MOISTURE_SMOOTHING/100.0);
+  kept = kept + soil_moisture * (100-MOISTURE_SMOOTHING)/100.0;
+  return kept;
 }
