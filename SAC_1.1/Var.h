@@ -6,6 +6,22 @@
  *      Author: victor Suarez<suarez.garcia.victor@gmail.com>
  *      Co-Author: David Cuevas.
  */
+float pump_duty_cycle      = 50;
+float pump_cycle_length    = 0;
+float temperature_target      = 0;
+float temperature_range       = 1;
+float moisture_target      = 0;
+float moisture_range       = 10;
+float moisture_calib       = 500;
+
+float humidity_target = 0;
+float humidity_range = 10;
+
+int   relay1_role = 0;
+int   relay2_role = 0;
+int   relay3_role = 0;
+int   is_editing  = 0;
+int   is_print    = 0;
 
 enum {
   S_EMPTY=0,
