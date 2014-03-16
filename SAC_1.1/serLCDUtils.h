@@ -5,6 +5,7 @@
  *      Author: dcuevas
  */
 #include "serLCD.h"
+#include "RTCUtils.h"
 
 #define LCD_PIN 11
 
@@ -343,20 +344,24 @@ void draw_log(void) {
 
 }
 int offset = 0;
-volatile int32_t ticks = 0;
-volatile int32_t mticks = 0;
+
 #define MIDNIGHT (60*24)
 int get_seconds_since_midnight(void) {
-	return ticks;
+	tmElements_t tm;
+	tm=RTCread(tm);
+	int hours = tm.Hour;
+	int minutes=tm.Minute;
+	int seconds=tm.Second;
+	int totalseconds= hours*3600+ minutes*60+seconds;
+	return totalseconds;
 }
 int get_minutes_since_midnight(void) {
-	int32_t minutes = mticks;
-	minutes += offset;
-	while (minutes < 0)
-		minutes += MIDNIGHT;
-	while (minutes > MIDNIGHT)
-		minutes -= MIDNIGHT;
-	return minutes;
+		tmElements_t tm;
+		tm=RTCread(tm);
+		int hours = tm.Hour;
+		int minutes=tm.Minute;
+		int totalminutes= hours*60+ minutes;
+		return totalminutes;
 }
 
 void draw_ui(void) {
@@ -409,7 +414,9 @@ void draw_ui(void) {
 			break;
 		case UPTIME: {
 			seriallcd.setCursor(0, 1);
-			seriallcd.print((float) ticks);
+			tmElements_t tm;
+			RTCread(tm);
+			seriallcd.print((float)getSeconds(tm));
 		}
 			break;
 		case TEXT:

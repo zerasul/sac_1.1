@@ -420,7 +420,7 @@ void setup(){
 void loop()
 {
 
-	//TODO: READ RTC
+
 
 
 	  read_sensors ();
