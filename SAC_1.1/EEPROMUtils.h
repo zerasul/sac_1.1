@@ -156,3 +156,9 @@ void reset_settings (ConfigItem *menu)
     }
 }
 
+void end_editing (void)
+{
+  is_editing = 0;
+  store_settings (config);
+}
+
