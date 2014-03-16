@@ -41,9 +41,9 @@ and Adrian from Artesanos Industriales del Sur.
 #include "serLCDUtils.h"
 #include "sac_sensors.h"
 
-#define RELAY_1_PIN 5
-#define RELAY_2_PIN 6
-#define RELAY_3_PIN 4
+#define RELAY1_PIN 5
+#define RELAY2_PIN 6
+#define RELAY3_PIN 4
 
 #define BUTTON_UP_PIN 9
 #define BUTTON_ENTER_PIN 8

@@ -1,8 +1,9 @@
 /*
- * sac_sensors.h
+ * sac_sensors.h: This file contains all the functions for read the AHTS Sensors
  *
  *  Created on: 16/03/2014
- *      Author: victor
+ *      Author: victor suarez
+ *      Co-Author: David Cuevas
  */
 
 #include "Arduino.h"
