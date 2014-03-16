@@ -42,6 +42,11 @@ and Adrian from Artesanos Industriales del Sur.
 #define BUTTON_DOWN_PIN 7
 
 
+/* distance between datalog entries in minutes */
+#define LOG_INTERVAL 60
+
+static LogEntry datalog[24*60/LOG_INTERVAL];
+
 //The setup function is called once at startup of the sketch
 void setup()
 {

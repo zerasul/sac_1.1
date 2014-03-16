@@ -49,3 +49,9 @@ enum {
   S_LOG,
   MIN,
 };
+
+typedef struct {
+//  int temperature;
+  int moisture;
+//  int humidity;
+} LogEntry;
