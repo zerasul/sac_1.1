@@ -33,6 +33,8 @@ and Adrian from Artesanos Industriales del Sur.
 
 #include "SAC_1.1.h"
 #include "Var.h"
+#include "languages.h"
+
 #define RELAY_1_PIN 5
 #define RELAY_2_PIN 6
 #define RELAY_3_PIN 4
