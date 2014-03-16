@@ -17,6 +17,10 @@ float moisture_calib       = 500;
 
 /*----------------------------------------*/
 
+/*---------------Functions Definition------*/
+
+float moisture_read ();
+
 // Function to read AHTS.
 unsigned char read_ahts_dat() {
   unsigned char i = 0;
