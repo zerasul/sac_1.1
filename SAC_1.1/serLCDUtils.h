@@ -233,3 +233,23 @@ void go_back (void)
   menu_active = prev_menu_active[menu_depth];
   clearScreen();
 }
+
+/****/
+
+int message_ttl = 0;
+
+void message(char *line1, char *line2)
+{
+
+clearScreen();
+//  LCD.setCursor(0,0);
+seriallcd.setCursor(0,1);
+//  LCD.print(line1);
+seriallcd.print(line1);
+//  LCD.setCursor(0,1);
+seriallcd.setCursor(1,0);
+  if (line2)
+    seriallcd.print(line2);
+  clearScreen();
+  message_ttl = 3;
+}
