@@ -71,7 +71,7 @@ and Adrian from Artesanos Industriales del Sur.
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2
 
-#define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
+
 /* distance between datalog entries in minutes */
 #define LOG_INTERVAL 60
 
