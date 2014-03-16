@@ -92,6 +92,11 @@ serLCD serialLcd(11);
 int lcd_initialized=0;
 
 
+Relay *find_relay (int role);
+
+Relay relay[MAX_RELAYS]={{RELAY1_PIN},{RELAY2_PIN},{RELAY3_PIN}};
+
+
 //The setup function is called once at startup of the sketch
 void setup_arduino()
 {
