@@ -560,3 +560,241 @@ void reset_lights (void)
     lights_duration [i] = 0;
   }
 }
+
+
+
+void menu_enter (void)
+{
+  MenuItem *mi = &menu[menu_active];
+
+  if (mi->type == STATUS)
+    return;
+  if (mi->type == SUBMENU)
+  {
+    enter_menu ((MenuItem*)mi->data);
+    return;
+  }
+  if (mi->type == BACK)
+  {
+    go_back ();
+    return;
+  }
+
+  if (mi->type == LIGHTS_RESET)
+  {
+    reset_lights ();
+    message ("Reset lighting", "schedule.");
+    end_editing ();
+  }
+  else if (mi->type == STORE_SETTINGS)
+  {
+    store_settings (config);
+    message ("Settings stored.", "");
+  }
+  else if (mi->type == LOAD_SETTINGS)
+  {
+    load_settings (config);
+  }
+  else if (mi->type == RESET_SETTINGS)
+  {
+    reset_settings (config);
+    end_editing ();
+    message ("Factory defaults", "");
+  }
+  else if (mi->type == ONOFF)
+  {
+    int *val = (int*)mi->data;
+    *val = !*val;
+    end_editing ();
+  }
+  else
+  {
+    is_editing = 1;
+  }
+}
+
+void editing_handle_events (int event)
+{
+  MenuItem *mi = &menu[menu_active];
+
+  if (!(mi->type == NUMBER ||
+        mi->type == ROLE ||
+        mi->type == LANGUAGE ||
+        mi->type == TIME ||
+        mi->type == LOG ||
+        mi->type == SOIL_CALIBRATE))
+  {
+    end_editing ();
+    return;
+  }
+
+  if ((mi->type == NUMBER ||
+       mi->type == TIME) && event == BUTTON_ENTER)
+  {
+    is_editing++;
+    if (is_editing>=3)
+    {
+      if (mi->data == &minutes)
+      {
+        /* store back edited tim */
+        offset = (minutes - (get_minutes_since_midnight () - offset));
+      }
+      end_editing();
+      return;
+    }
+  }
+  else if (event == BUTTON_ENTER)
+  {
+    end_editing();
+  }
+
+  if (mi->data || mi->type == LOG)
+    switch (mi->type)
+    {
+      case ROLE:
+        {
+        int *val = (int*)mi->data;
+        switch (event)
+          {
+            case BUTTON_UP:
+              (*val) -= 1;
+              if (*val < 0)
+                *val = roles_c - 1;
+              clearScreen();
+              break;
+            case BUTTON_DOWN:
+              (*val) += 1;
+              if ((*val) >= roles_c)
+                *val = 0;
+              clearScreen();
+              break;
+            case IDLE:
+            case TIMEOUT:
+            case BUTTON_ENTER:
+              break;
+          }
+        }
+        break;
+
+      case LOG:
+        {
+        switch (event)
+          {
+            case BUTTON_UP:
+              logno--;
+              if (logno<0)
+                logno = (24*60/LOG_INTERVAL)-1;
+              clearScreen();
+              break;
+            case BUTTON_DOWN:
+              logno++;
+              if (logno >= 24 * 60 / LOG_INTERVAL)
+                logno = 0;
+              clearScreen();
+              break;
+            case IDLE:
+            case TIMEOUT:
+            case BUTTON_ENTER:
+              break;
+          }
+        }
+        break;
+
+      case LANGUAGE:
+        {
+        int *val = (int*)mi->data;
+        switch (event)
+          {
+            case BUTTON_UP:
+              (*val) -= 1;
+              if (*val < 0)
+                *val = roles_c - 1;
+              clearScreen();
+              break;
+            case BUTTON_DOWN:
+              (*val) += 1;
+              if ((*val) >= MAX_LANGUAGE)
+                *val = 0;
+              clearScreen();
+              break;
+            case IDLE:
+            case TIMEOUT:
+            case BUTTON_ENTER:
+              break;
+          }
+        }
+        break;
+
+      case NUMBER:
+        {
+        float *val = (float*)mi->data;
+        switch (event)
+          {
+            case BUTTON_UP:
+              if (is_editing == 1)
+                (*val) += 10;
+              else
+                (*val) += 1;
+              if (*val > 100)
+                *val = 100;
+              break;
+            case BUTTON_DOWN:
+              if (is_editing == 1)
+                (*val) -= 10;
+              else
+                (*val) -= 1;
+
+              if (*val < 0)
+                *val = 0;
+              break;
+            case IDLE:
+            case TIMEOUT:
+            case BUTTON_ENTER:
+              break;
+          }
+        break;
+        }
+
+      case TIME:
+        {
+        int *val = (int*)mi->data;
+        switch (event)
+          {
+            case BUTTON_UP:
+              if (is_editing == 1)
+                (*val) += 60;
+              else
+                (*val) += 1;
+
+               if (*val > MIDNIGHT)
+                 *val = *val - MIDNIGHT;
+              break;
+            case BUTTON_DOWN:
+              if (is_editing == 1)
+                (*val) -= 60;
+              else
+                (*val) -= 1;
+
+              if (*val < 0)
+                *val = MIDNIGHT - *val;
+              break;
+            case IDLE:
+            case TIMEOUT:
+            case BUTTON_ENTER:
+              break;
+          }
+        break;
+        }
+
+      case SOIL_CALIBRATE:
+        moisture_calib = cached_moisture;
+        is_editing = 0;
+      case IDLE:
+        break;
+      default:
+        break;
+    }
+}
+
+
+
