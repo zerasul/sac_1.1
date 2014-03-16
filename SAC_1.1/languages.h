@@ -9,7 +9,7 @@
  *   SAC: Version 1.1.
  */
 
-#define MAX_LANGUAGE 2
+#define MAX_LANGUAGE 4
 typedef struct TranslatedString {
   const char *languages[MAX_LANGUAGE];
 } TranslatedString;
