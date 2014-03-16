@@ -54,6 +54,19 @@ and Adrian from Artesanos Industriales del Sur.
 #define MAX_RELAYS 4
 #define MAX_LIGHTS 1
 
+// Pin for soil moisture sensor (MOISTURE).
+// http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor
+#define MOISTURE_PIN A3
+
+// Define min and max hum for soil (MOISTURE).
+#define soil_moisture_MIN 45
+#define soil_moisture_MAX 80
+
+// Pin for air humdity and temperature sensor (AHTS).
+#define AHTS_PIN A0
+
+// Pin for water tank nivel sensor (WTS).
+#define WTS_PIN A2
 
 #define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
 /* distance between datalog entries in minutes */
