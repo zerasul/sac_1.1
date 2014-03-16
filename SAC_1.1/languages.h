@@ -63,3 +63,20 @@ TranslatedString string_db[]={
 };
 
 int active_language = 0;
+
+/* returns a translated string; if no translation found - return the original
+ * string.
+ */
+static const char *translate(int stringno)
+{
+  if (active_language < 0)
+    active_language = 0;
+  if (active_language >= MAX_LANGUAGE)
+    active_language = MAX_LANGUAGE-1;
+
+  if (string_db[stringno].languages[active_language])
+    return string_db[stringno].languages[active_language];
+  else
+    return string_db[stringno].languages[0];
+}
+
