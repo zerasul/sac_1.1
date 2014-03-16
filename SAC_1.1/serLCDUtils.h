@@ -8,6 +8,9 @@
 
 #define LCD_PIN 11
 
+/* distance between datalog entries in minutes */
+#define LOG_INTERVAL 60
+
 serLCD seriallcd(LCD_PIN);
 
 //NUEVA LIBRERIA LCD CON FUNCIONES PREDEFINIDAS
