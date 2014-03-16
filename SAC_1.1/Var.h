@@ -57,3 +57,29 @@ typedef struct {
   int moisture;
 //  int humidity;
 } LogEntry;
+
+enum {
+  DISCONNECTED,
+  IRRIGATION,
+  HUMIDIFIER,
+  VENTILATION,
+  HEATING,
+  COOLING,
+    LIGHT,
+  ALARM,
+  ON
+};
+
+int roles[] = {
+  S_DISCONNECTED,
+  S_IRRIGATION,
+  S_HUMIDIFIER,
+  S_VENTILATION,
+  S_HEATING,
+  S_COOLING,
+  S_LIGHT,
+
+
+/*  S_ALARM,*/
+/*  S_ON*/
+};
