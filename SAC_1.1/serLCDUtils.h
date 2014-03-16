@@ -18,6 +18,14 @@ serLCD seriallcd(LCD_PIN);
 #define LCD_SENDCOMMAND(command){seriallcd.print(0xFE); seriallcd.print(command); }
 #define LCD_SPECIALCOMMAND(scommand){seriallcd.print(0x7C); seriallcd.print(scommand); }
 //-------------------------------------------------------------------------------------------
+
+#define MAX_LIGHTS 1
+
+int lights_start[MAX_LIGHTS] = {0,};
+int lights_duration[MAX_LIGHTS]   = {0,};
+
+
+
 void clearScreen()
 {
   //clears the screen, you will use this a lot!

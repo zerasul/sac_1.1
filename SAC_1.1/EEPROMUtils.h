@@ -7,12 +7,9 @@
  */
 #include "EEPROM.h"
 
-#define MAX_LIGHTS 1
+
 
 #define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
-
-int lights_start[MAX_LIGHTS] = {0,};
-int lights_duration[MAX_LIGHTS]   = {0,};
 
 
 /*Write in The EEPROM MEmory.
