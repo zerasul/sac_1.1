@@ -165,6 +165,48 @@ int get_event (void)
   return IDLE;
 }
 
+Relay *find_relay (int role)
+{
+  Relay *ret = (Relay*)NULL;
+  int i;
+  for (i = 0; i < MAX_RELAYS; i++)
+    if (relay[i].role == role)
+      return &relay[i];
+  return ret;
+}
+
+void relay_on (Relay *relay)
+{
+  if (relay->state == RELAY_ON)
+    return;
+  relay->state = RELAY_ON;
+
+
+  if (relay->gpio_pin)
+    digitalWrite(relay->gpio_pin, HIGH);
+
+}
+
+void relay_wait (Relay *relay)
+{
+  if (relay->state == RELAY_WAITING)
+    return;
+  relay->state = RELAY_WAITING;
+
+  digitalWrite(relay->gpio_pin, LOW);
+
+}
+
+void relay_off (Relay *relay)
+{
+  if (relay->state == RELAY_OFF)
+    return;
+  relay->state = RELAY_OFF;
+
+  digitalWrite(relay->gpio_pin, LOW);
+
+}
+
 void setup(){
 
 }
