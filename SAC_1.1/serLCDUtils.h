@@ -254,6 +254,11 @@ seriallcd.setCursor(1,0);
   message_ttl = 3;
 }
 
+
+
+
+void print_time (int minutes_since_midnight);
+
 void draw_status (int time,
                   int moisture,
                   int temperature,
