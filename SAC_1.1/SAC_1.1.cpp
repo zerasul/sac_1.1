@@ -72,8 +72,7 @@ and Adrian from Artesanos Industriales del Sur.
 #define WTS_PIN A2
 
 
-/* distance between datalog entries in minutes */
-#define LOG_INTERVAL 60
+
 
 void  message(char *line1, char *line2);
 
