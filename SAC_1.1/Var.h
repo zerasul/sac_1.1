@@ -23,6 +23,8 @@ int   relay3_role = 0;
 int   is_editing  = 0;
 int   is_print    = 0;
 
+
+
 enum {
   S_EMPTY=0,
   S_WA,
