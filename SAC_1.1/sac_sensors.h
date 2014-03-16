@@ -11,15 +11,37 @@
 // Pin for air humdity and temperature sensor (AHTS).
 #define AHTS_PIN A0
 
+/*
+ * MOISURE SMOOTHING
+ */
 #define MOISTURE_SMOOTHING  85
 
+/*
+ * MOISURE POWER PIN
+ */
 #define SOIL_MOISTURE_POWER_PIN 3
 
+/*
+ * MOISURE PIN
+ */
 #define MOISTURE_PIN A3
 
+/*
+ * WATER TANK PIN
+ */
 #define WTS_PIN A2
 /*------------Global Variables-------------*/
 float moisture_calib       = 500;
+
+float cached_temperature = 23;
+
+float cached_humidity    = 11;
+
+float cached_moisture    = 111;
+
+
+int   cached_water_level = 1;
+
 int readingno=0;
 /*----------------------------------------*/
 
@@ -103,7 +125,11 @@ void aths_read_data(float *hum_out, float *temp_out) {
   if (hum_out) *hum_out = humdity;
   if (temp_out) *temp_out = temperature;
 }
-
+/**
+ * Read the data from moisure.
+ *
+ * returns the moisure data.
+ */
 float moisture_read()
 {
   static float kept = 0;
@@ -116,7 +142,9 @@ float moisture_read()
   kept = kept + soil_moisture * (100-MOISTURE_SMOOTHING)/100.0;
   return kept;
 }
-
+/**
+ * Read from the sensors of SAC System.
+ */
 void read_sensors (void)
 {
   float air_data[2];

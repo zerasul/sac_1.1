@@ -347,24 +347,24 @@ int offset = 0;
 
 #define MIDNIGHT (60*24)
 int get_seconds_since_midnight(void) {
-	tmElements_t tm;
-	tm=RTCread(tm);
-	int hours = tm.Hour;
-	int minutes=tm.Minute;
-	int seconds=tm.Second;
+	tmElements_t* tm;
+	RTCread(tm);
+	int hours = tm->Hour;
+	int minutes=tm->Minute;
+	int seconds=tm->Second;
 	int totalseconds= hours*3600+ minutes*60+seconds;
 	return totalseconds;
 }
 int get_minutes_since_midnight(void) {
-		tmElements_t tm;
-		tm=RTCread(tm);
-		int hours = tm.Hour;
-		int minutes=tm.Minute;
+		tmElements_t* tm;
+		RTCread(tm);
+		int hours = tm->Hour;
+		int minutes=tm->Minute;
 		int totalminutes= hours*60+ minutes;
 		return totalminutes;
 }
 
-void draw_ui(void) {
+void draw_ui(float cached_temperature, float cached_humidity) {
 	MenuItem *mi = &menu[menu_active];
 
 	if (message_ttl) {

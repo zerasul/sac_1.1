@@ -12,7 +12,7 @@ float temperature_target      = 0;
 float temperature_range       = 1;
 float moisture_target      = 0;
 float moisture_range       = 10;
-float moisture_calib       = 500;
+
 
 float humidity_target = 0;
 float humidity_range = 10;
