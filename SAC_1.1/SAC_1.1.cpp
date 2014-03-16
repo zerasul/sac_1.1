@@ -206,12 +206,243 @@ void relay_off (Relay *relay)
   digitalWrite(relay->gpio_pin, LOW);
 
 }
+float elapsed_minutes(int time1, int time2);
+void update_relay_state (void)
+{
+  Relay *water       = find_relay (IRRIGATION);
+  Relay *light       = find_relay (LIGHT);
+  Relay *ventilation = find_relay (VENTILATION);
+  Relay *humidifier  = find_relay (HUMIDIFIER);
+  Relay *alarm       = find_relay (ALARM);
+  Relay *heating     = find_relay (HEATING);
+  Relay *cooling     = find_relay (COOLING);
+
+  static int last_water_event = 0; /* time of day we last switch water
+                                      on or off for cycling */
+  int alarmed = 0;
+  /* This is the core logic of SAC */
+  int i;
+  for (i = 0; i < MAX_RELAYS; i++)
+    if (relay[i].role == DISCONNECTED)
+      relay_off (&relay[i]);
+
+  if (cooling)
+    {
+      int   is_cooling = cooling->state != RELAY_OFF;
+
+      if (is_cooling)
+        {
+          if (cached_temperature < temperature_target - temperature_range/2)
+            relay_off (cooling);
+        }
+      else
+        {
+          if (cached_temperature > temperature_target + temperature_range/2)
+            relay_on (cooling);
+        }
+    }
+
+  if (heating)
+    {
+      int   is_heating = heating->state != RELAY_OFF;
+
+      if (is_heating)
+        {
+          if (cached_temperature > temperature_target + temperature_range/2)
+            relay_off (heating);
+        }
+      else
+        {
+          if (cached_temperature < temperature_target - temperature_range/2)
+            relay_on (heating);
+        }
+    }
+
+
+
+  if (ventilation)
+    {
+      int   is_venting = ventilation->state != RELAY_OFF;
+
+      if (is_venting)
+        {
+          if (cached_humidity < humidity_target - humidity_range/2)
+            relay_off (ventilation);
+        }
+      else
+        {
+          if (cached_humidity > humidity_target + humidity_range/2)
+            relay_on (ventilation);
+        }
+    }
+
+  if (humidifier)
+    {
+      int   is_humidifing  = humidifier->state != RELAY_OFF;
+
+      if (is_humidifing)
+        {
+          if (cached_humidity > humidity_target + humidity_range/2)
+            relay_off (humidifier);
+        }
+      else
+        {
+          if (cached_humidity < humidity_target - humidity_range/2)
+            relay_on (humidifier);
+        }
+    }
+
+  if (light)
+    {
+      int i;
+      int found = 0;
+      int minutes = get_minutes_since_midnight ();
+
+      for (i = 0; i < MAX_LIGHTS; i++)
+        {
+          int start;
+          int end;
+          start = lights_start[i];
+          end   = start + lights_duration [i];
+
+          while (end > 24 * 60)
+            end -= 24 * 60;
+
+          if (end < start)
+            {
+              /* time period crossing midnight */
+              if ((minutes >= start && minutes < MIDNIGHT) ||
+                  minutes < end)
+                found = 1;
+            }
+          else
+            {
+              if (minutes >= start && minutes < end)
+                found = 1;
+            }
+
+        }
+      /* check if current time is inside
+       * the timespan
+       */
+      if (found)
+        relay_on (light);
+      else
+        relay_off (light);
+    }
+
+  if (water && !cached_water_level)
+    {
+      relay_off (water);
+      alarmed ++;
+    }
+  else if (water)
+    {
+      float moisture = moisture_read ();
+      int   is_watering = water->state != RELAY_OFF;
+
+      if (is_watering)
+        {
+          if (water->state == RELAY_ON)
+            {
+                if (elapsed_minutes (get_seconds_since_midnight (),
+                                  last_water_event) >
+                    (pump_cycle_length * pump_duty_cycle / 100))
+                  {
+                    relay_wait (water);
+                    last_water_event = get_seconds_since_midnight ();
+                  }
+            }
+          else
+            {
+                if (elapsed_minutes (get_seconds_since_midnight (),
+                                  last_water_event) >
+                    (((100-pump_duty_cycle) * pump_cycle_length) / 100))
+                  {
+                    relay_on (water);
+                    last_water_event = get_seconds_since_midnight ();
+                  }
+            }
+
+          if (moisture > moisture_target + moisture_range/2)
+            relay_off (water);
+        }
+      else
+        {
+          if (moisture < moisture_target - moisture_range/2)
+            relay_on (water);
+          last_water_event = get_minutes_since_midnight ();
+        }
+    }
+  if (alarm)
+    {
+      if (alarmed)
+        relay_on (alarm);
+      else
+        relay_off (alarm);
+    }
+
+
+  for (i = 0; i < MAX_RELAYS; i++)
+    {
+      if (relay[i].role == ON)
+        relay_on (&relay[i]);
+      else if (relay[i].role == DISCONNECTED)
+        relay_off (&relay[i]);
+    }
+}
+
+void store_log (void)
+{
+  /* we continously update the "current" entry */
+  int logno = get_minutes_since_midnight () / LOG_INTERVAL;
+  if ((logno < 0) ||
+      (logno >= (24*60/LOG_INTERVAL)))
+    logno = 0;
+//  datalog[logno].temperature = cached_temperature;
+//  datalog[logno].humidity = cached_humidity;
+//  datalog[logno].moisture = moisture_read();//cached_moisture * 100 / moisture_calib;
+}
 
 void setup(){
+
+	reset_settings (config);
+	  if (load_settings (config) != 0)
+	    {
+	      menu_active = 10; /* XXX: should be language selection!! */
+	      is_editing = 1;
+	    }
+
+	  setup_arduino ();
 
 }
 // The loop function is called in an endless loop
 void loop()
 {
-//Add your repeated code here
+
+	//TODO: READ RTC
+
+
+	  read_sensors ();
+	  store_log ();
+	  update_relay_state ();
+
+	  handle_events (); /* handle user events, if any */
+
+
+	  draw_ui ();       /* draw ui in current state*/
+
+	  /* XXX
+	  if (menu == main_menu && menu_active == 0)
+	    delay (LOOP_DELAY);
+	  else
+	   */ {
+	      int i;
+	      for (i = 0; i < MENU_SPEEDUP; i++)
+	        {
+	          delay (LOOP_DELAY/MENU_SPEEDUP);
+	          handle_events (); /* handle user events, if any */
+	          draw_ui ();       /* draw ui in current state*/
+	        }
+	    }
 }

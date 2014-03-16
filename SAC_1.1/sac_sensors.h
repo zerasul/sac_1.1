@@ -12,9 +12,15 @@
 #define AHTS_PIN A0
 
 #define MOISTURE_SMOOTHING  85
+
+#define SOIL_MOISTURE_POWER_PIN 3
+
+#define MOISTURE_PIN A3
+
+#define WTS_PIN A2
 /*------------Global Variables-------------*/
 float moisture_calib       = 500;
-
+int readingno=0;
 /*----------------------------------------*/
 
 /*---------------Functions Definition------*/
@@ -109,4 +115,22 @@ float moisture_read()
   kept = (kept * MOISTURE_SMOOTHING/100.0);
   kept = kept + soil_moisture * (100-MOISTURE_SMOOTHING)/100.0;
   return kept;
+}
+
+void read_sensors (void)
+{
+  float air_data[2];
+
+  readingno++;
+
+  if (readingno % 4 == 0)
+    {
+      aths_read_data (&cached_humidity, &cached_temperature);
+    }
+
+  cached_water_level = (digitalRead(WTS_PIN) == LOW);
+
+  digitalWrite(SOIL_MOISTURE_POWER_PIN, HIGH);
+  cached_moisture = analogRead(MOISTURE_PIN);
+  digitalWrite(SOIL_MOISTURE_POWER_PIN, LOW);
 }
