@@ -387,3 +387,158 @@ void draw_log (void)
   seriallcd.print("%  ");
 
 }
+int offset = 0;
+volatile int32_t ticks = 0;
+volatile int32_t mticks = 0;
+#define MIDNIGHT (60*24)
+int get_seconds_since_midnight (void)
+{
+  return ticks;
+}
+int get_minutes_since_midnight (void)
+{
+  int32_t minutes = mticks;
+  minutes += offset;
+  while (minutes < 0)
+    minutes += MIDNIGHT;
+  while (minutes > MIDNIGHT)
+    minutes -= MIDNIGHT;
+  return minutes;
+}
+
+void draw_ui (void)
+{
+  MenuItem *mi = &menu[menu_active];
+
+  if (message_ttl)
+    {
+      message_ttl--;
+      if (message_ttl>0)
+        return;
+     clearScreen();
+    }
+  seriallcd.setCursor(0,0);
+
+   switch (mi->type)
+   {
+     case STATUS:
+       draw_status (get_minutes_since_midnight (), moisture_read(), cached_temperature, cached_humidity);
+       clearScreen();
+       return;
+
+     case LOG:
+       draw_log ();
+       clearScreen();
+       return;
+
+     default:
+
+       seriallcd.print (translate(mi->label));
+       seriallcd.setCursor(0,1);
+       if (mi->label2)
+         seriallcd.print (translate(mi->label2));
+
+       break;
+   }
+
+   if (mi->data || mi->type == UPTIME)
+     switch (mi->type)
+     {
+       case TIME:
+         /* special casing for showing the time when not
+          * editing it
+          */
+         if (!is_editing)
+           minutes = get_minutes_since_midnight ();
+
+         {
+           int *time = ((int*)(mi->data));
+           int foo = *time;
+           print_time (foo);
+         }
+         break;
+       case UPTIME:
+         {
+           seriallcd.setCursor(0,1);
+           seriallcd.print((float)ticks);
+         }
+         break;
+       case TEXT:
+         seriallcd.print((char *)mi->data);
+         break;
+       case NUMBER:
+         if (is_editing)
+         {
+           int ones, tens;
+           tens = (*(float*)(mi->data));
+           ones = tens % 10;
+           tens -= ones;
+           tens /= 10;
+
+           if (is_editing == 1)
+           {
+             seriallcd.print(tens);
+             seriallcd.print(ones);
+           }
+           else if (is_editing == 2)
+           {
+             seriallcd.print(tens);
+             seriallcd.print(ones);
+           }
+           else
+             seriallcd.print( (*(float*)(mi->data)) );
+         }
+         else
+           seriallcd.print( (*(float*)(mi->data)) );
+         break;
+
+       case SOIL_CALIBRATE:
+         if (is_editing)
+           seriallcd.print( (*(float*)(mi->data)) );
+         else
+           seriallcd.print( (*(float*)(mi->data)) );
+         /*seriallcd.print("s ");*/
+         seriallcd.print(" -ENTER- ");
+         seriallcd.print(cached_moisture);
+         seriallcd.print("   ");
+         /*seriallcd.print("v ");*/
+         /*seriallcd.print(moisture_read());*/
+
+         break;
+
+       case ROLE:
+         {
+           int role = (*((int*)(mi->data)));
+           seriallcd.print("[");
+           if (is_editing)
+             seriallcd.print(translate(roles[role]));
+           else
+             seriallcd.print(translate(roles[role]));
+           seriallcd.print("]");
+         }
+         break;
+
+       case LANGUAGE:
+         {
+           seriallcd.print("[");
+           if (is_editing)
+             seriallcd.print(translate(S_ENGLISH));
+           else
+             seriallcd.print(translate(S_ENGLISH));
+           seriallcd.print("]");
+         }
+         break;
+
+       case ONOFF:
+         if(*((int*)(mi->data)))
+           seriallcd.print(translate(S_ENABLED));
+         else
+           seriallcd.print(translate(S_DISABLED));
+         break;
+
+       default:
+         break;
+     }
+
+   clearScreen();
+ }
