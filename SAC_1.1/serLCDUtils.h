@@ -550,3 +550,13 @@ void draw_ui (void)
 
    clearScreen();
  }
+
+void reset_lights (void)
+{
+  int i;
+  for (i = 0; i < MAX_LIGHTS; i++)
+  {
+    lights_start[i] = 0;
+    lights_duration [i] = 0;
+  }
+}
