@@ -34,9 +34,10 @@ and Adrian from Artesanos Industriales del Sur.
 #include "SAC_1.1.h"
 #include "Var.h"
 #include "languages.h"
-#include "EEPROM.h"
-#include "SoftwareSerial.h"
 
+#include "SoftwareSerial.h"
+#include "serLCD.h"
+#include "EEPROMUtils.h"
 #define RELAY_1_PIN 5
 #define RELAY_2_PIN 6
 #define RELAY_3_PIN 4
@@ -83,6 +84,11 @@ int   cached_water_level = 1;
 
 
 static LogEntry datalog[24*60/LOG_INTERVAL];
+
+serLCD serialLcd(11);
+
+int lcd_initialized=0;
+
 
 //The setup function is called once at startup of the sketch
 void setup()

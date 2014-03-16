@@ -37,5 +37,10 @@
 			<type>2</type>
 			<locationURI>ArduinoLibPath/SoftwareSerial</locationURI>
 		</link>
+		<link>
+			<name>serLCD</name>
+			<type>2</type>
+			<locationURI>PivateLibPath/serLCD</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>
