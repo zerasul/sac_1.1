@@ -43,9 +43,22 @@ and Adrian from Artesanos Industriales del Sur.
 #define BUTTON_ENTER_PIN 8
 #define BUTTON_DOWN_PIN 7
 
+#define MAX_RELAYS 4
+#define MAX_LIGHTS 1
 
+#define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
 /* distance between datalog entries in minutes */
 #define LOG_INTERVAL 60
+
+void  message(char *line1, char *line2);
+
+/* global variables, containing this loop iterations sensor readings */
+/* Caching some initial reading for sensors */
+float cached_moisture    = 111;
+float cached_humidity    = 11;
+float cached_temperature = 23;
+int   cached_water_level = 1;
+
 
 static LogEntry datalog[24*60/LOG_INTERVAL];
 
