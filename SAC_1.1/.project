@@ -28,6 +28,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>DS1307RTC</name>
+			<type>2</type>
+			<locationURI>PivateLibPath/DS1307RTC</locationURI>
+		</link>
+		<link>
 			<name>EEPROM</name>
 			<type>2</type>
 			<locationURI>ArduinoLibPath/EEPROM</locationURI>
@@ -36,6 +41,16 @@
 			<name>SoftwareSerial</name>
 			<type>2</type>
 			<locationURI>ArduinoLibPath/SoftwareSerial</locationURI>
+		</link>
+		<link>
+			<name>Time</name>
+			<type>2</type>
+			<locationURI>PivateLibPath/Time</locationURI>
+		</link>
+		<link>
+			<name>Wire</name>
+			<type>2</type>
+			<locationURI>ArduinoLibPath/Wire</locationURI>
 		</link>
 		<link>
 			<name>serLCD</name>
