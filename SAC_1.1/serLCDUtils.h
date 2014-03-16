@@ -253,3 +253,129 @@ seriallcd.setCursor(1,0);
   clearScreen();
   message_ttl = 3;
 }
+
+void draw_status (int time,
+                  int moisture,
+                  int temperature,
+                  int humidity)
+{
+  seriallcd.setCursor(6,0);
+/*LCD.print(translate(S_A));*/
+  seriallcd.print(temperature);
+  seriallcd.print("C");
+
+//  LCD.setCursor(0, 1);
+  seriallcd.print(humidity);
+  seriallcd.print("% HR");
+  seriallcd.setCursor(0, 1);
+  seriallcd.print(translate(S_S));
+  seriallcd.print(moisture_target);
+  seriallcd.print("% ");
+  seriallcd.setCursor(8,1);
+  seriallcd.print(translate(MIN));
+  seriallcd.setCursor(16,1);
+  seriallcd.print("[");
+  seriallcd.setCursor(18,1);
+  seriallcd.print(moisture);
+  seriallcd.setCursor(19,1);
+  seriallcd.print("]");
+
+
+
+
+  {
+    Relay *light = find_relay (LIGHT);
+    if (light)
+    {
+      seriallcd.setCursor(6, 1);
+      if (light->state == RELAY_ON)
+        seriallcd.print(translate(S_L));
+    }
+  }
+
+  {
+    Relay *heating = find_relay (HEATING);
+    Relay *cooling = find_relay (COOLING);
+    if (heating)
+    {
+      seriallcd.setCursor(8, 1);
+      if (heating->state == RELAY_ON)
+        seriallcd.print("+");
+      else
+        {
+          if (cooling && cooling->state == RELAY_ON)
+            seriallcd.print("-");
+          else
+            seriallcd.print(" ");
+        }
+    }
+  }
+
+  {
+    Relay *ventilation = find_relay (VENTILATION);
+    Relay *humidifier = find_relay (HUMIDIFIER);
+    if (ventilation && ventilation->state == RELAY_ON)
+      {
+        seriallcd.setCursor(3, 1);
+        seriallcd.print(translate(S_V));
+      }
+    else if (humidifier && humidifier->state == RELAY_ON)
+      {
+        seriallcd.setCursor(3, 1);
+        seriallcd.print(translate(S_H));
+      }
+  }
+
+
+
+  {
+    Relay *water = find_relay (IRRIGATION);
+    if (water)
+    {
+      seriallcd.setCursor(0,1);
+      if (cached_water_level)
+        seriallcd.print("     "); /* LCD.print(translate(S_WA)); */
+      else
+        seriallcd.print(translate(S_WA));
+
+      seriallcd.setCursor(0,1);
+      switch (water->state)
+        {
+          case RELAY_ON:
+            seriallcd.print(translate(S_PU));
+            break;
+          case RELAY_OFF:
+            seriallcd.print("  ");
+            break;
+          case RELAY_WAITING:
+            seriallcd.print(translate(S_PU));
+            break;
+        }
+    }
+  }
+
+  seriallcd.setCursor(0,0);
+  {
+    print_time (time);
+  }
+}
+
+int logno = 0;
+void draw_log (void)
+{
+  seriallcd.setCursor(0,0);
+  print_time(logno*LOG_INTERVAL);
+  seriallcd.print(" ");
+  seriallcd.print(datalog[logno].moisture);
+  seriallcd.print("%  ");
+
+  seriallcd.setCursor(0,1);
+  print_time((logno+1)*LOG_INTERVAL);
+  seriallcd.print(" ");
+  if (logno+1 >= 24 * 60 / LOG_INTERVAL)
+  seriallcd.print(datalog[0].moisture);
+  else
+  seriallcd.print(datalog[logno+1].moisture);
+  seriallcd.print("%  ");
+
+}
