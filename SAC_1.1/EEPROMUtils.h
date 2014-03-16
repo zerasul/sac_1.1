@@ -8,6 +8,9 @@
 #include "EEPROM.h"
 
 #define MAX_LIGHTS 1
+
+#define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
+
 int lights_start[MAX_LIGHTS] = {0,};
 int lights_duration[MAX_LIGHTS]   = {0,};
 
@@ -61,5 +64,95 @@ ConfigItem config[]={
   {NULL,}
 };
 
+void store_settings (ConfigItem *menu)
+{
+  int i;
+  for (i = 0; menu[i].data; i++)
+    {
+      int ival = 0;
+      int pos = menu[i].eeprom_pos;
+      switch (menu[i].type)
+        {
+          case ONOFF:
+          case TIME:
+          case LANGUAGE:
+          case ROLE:
+            {
+              int *val = (int*)menu[i].data;
+              ival = *val;
+            }
+            break;
+          case SOIL_CALIBRATE:
+          case NUMBER:
+            {
+              float *sval = (float*)menu[i].data;
+              ival = *sval;
+            }
+            break;
+            break;
+          default:
+            break;
+        }
 
+      EEPROM_write(pos*2, ival % 256);
+      EEPROM_write(pos*2+1, ival / 256);
+    }
+  EEPROM_write(CFG_MAGIC, CFG_MAGIC_VALUE);
+}
+
+int load_settings (ConfigItem *menu)
+{
+  int i;
+  if (EEPROM_read(CFG_MAGIC) != CFG_MAGIC_VALUE)
+    return -1;
+  for (i = 0; menu[i].data; i++)
+    {
+        {
+          int pos = menu[i].eeprom_pos;
+          int ival;
+          ival = EEPROM_read(pos*2) +
+          EEPROM_read(pos*2+1) * 256;
+
+          switch (menu[i].type)
+            {
+              case SOIL_CALIBRATE:
+              case NUMBER:
+                {
+                  float *val = (float*)menu[i].data;
+                  *val = ival;
+                }
+                break;
+              case TIME:
+              case ROLE:
+              case LANGUAGE:
+                {
+                  int *val = (int*)menu[i].data;
+                  *val = ival;
+                }
+                break;
+            }
+        }
+    }
+    //message ("Loaded settings.", "");
+    return 0;
+}
+
+void reset_settings (ConfigItem *menu)
+{
+  int i;
+  for (i = 0; menu[i].data; i++)
+    {
+       if (menu[i].type == NUMBER ||
+           menu[i].type == SOIL_CALIBRATE)
+         {
+           float *sval = (float*)menu[i].data;
+           *sval = menu[i].default_value;
+         }
+       else
+         {
+           int *ival = (int*)menu[i].data;
+           *ival = menu[i].default_value;
+         }
+    }
+}
 

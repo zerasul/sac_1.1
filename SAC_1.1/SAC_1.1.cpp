@@ -71,7 +71,7 @@ and Adrian from Artesanos Industriales del Sur.
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2
 
-#define CFG_MAGIC_VALUE 25 //Magic value for writting EEPROM
+
 /* distance between datalog entries in minutes */
 #define LOG_INTERVAL 60
 
@@ -87,9 +87,7 @@ int   cached_water_level = 1;
 
 static LogEntry datalog[24*60/LOG_INTERVAL];
 
-serLCD serialLcd(11);
 
-int lcd_initialized=0;
 
 
 Relay *find_relay (int role);
@@ -118,6 +116,57 @@ void setup_arduino()
 
 	  seriallcd.display();
 }
+
+/* This key debouncer relies on being called once per loop iteration,
+ * it takes the input pin and a pointer to an integer to keep track of state.
+ */
+static int debounce_key (int pin, int *state)
+{
+  int pressed = digitalRead(pin);
+  int ret = 0;
+  if (pressed && (*state) == 0)
+    {
+      ret = 1;
+      *state += pressed;
+    }
+  else
+    *state = 0;
+
+  if (*state > 80) /* start repeating press once per cycle, after 5 cycles */
+    ret=1;
+
+  return ret;
+}
+
+int debounce_up (void)
+{
+  static int state = 0;
+  debounce_key (BUTTON_UP_PIN, &state);
+}
+
+int debounce_down (void)
+{
+  static int state = 0;
+  debounce_key (BUTTON_DOWN_PIN, &state);
+}
+
+int debounce_enter (void)
+{
+  static int state = 0;
+  debounce_key (BUTTON_ENTER_PIN, &state);
+}
+
+int get_event (void)
+{
+  if (debounce_up ())
+    return BUTTON_UP;
+  if (debounce_down ())
+    return BUTTON_DOWN;
+  if (debounce_enter ())
+    return BUTTON_ENTER;
+  return IDLE;
+}
+
 void setup(){
 
 }
