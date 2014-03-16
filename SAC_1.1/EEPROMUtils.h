@@ -60,7 +60,11 @@ ConfigItem config[]={
   {&active_language,    LANGUAGE,       CFG_LANGUAGE,                0},
   {NULL,}
 };
-
+/*
+ * This function store the settings in the EEPROM Memory.
+ *
+ * menu: settings with the configuration.
+ */
 void store_settings (ConfigItem *menu)
 {
   int i;
@@ -96,7 +100,11 @@ void store_settings (ConfigItem *menu)
     }
   EEPROM_write(CFG_MAGIC, CFG_MAGIC_VALUE);
 }
-
+/*
+ * Load the settings from EEPROM.
+ *
+ * menu: configuration Item
+ */
 int load_settings (ConfigItem *menu)
 {
   int i;
@@ -133,7 +141,9 @@ int load_settings (ConfigItem *menu)
     //message ("Loaded settings.", "");
     return 0;
 }
-
+/*
+ * Reset the settings for configuration Settings.
+ */
 void reset_settings (ConfigItem *menu)
 {
   int i;
@@ -152,7 +162,9 @@ void reset_settings (ConfigItem *menu)
          }
     }
 }
-
+/**
+ * Finish the editting mode and store the settings
+ */
 void end_editing (void)
 {
   is_editing = 0;
