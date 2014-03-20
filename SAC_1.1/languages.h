@@ -1,9 +1,9 @@
 /*
- * languages.h : File That contains all the Languaje Options for the Project SAC.
- *  In this file contains all the Messages for Print in screen in 2 Languajes.
+ * languages.h : File That contains all the Language Options for the Project SAC.
+ *  In this file contains all the Messages for Print in screen in 2 Languages.
  *
  *  Created on: 16/03/2014
- *      Author: dcuevas
+ *      Author: David Cuevas <mr.cavern@gmail.com>
  *      Collaborator: Victor Suarez<suarez.garcia.victor@gmail.com>
  *
  *   SAC: Version 1.1.
