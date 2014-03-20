@@ -415,7 +415,7 @@ void draw_ui(float cached_temperature, float cached_humidity) {
 		case UPTIME: {
 			seriallcd.setCursor(0, 1);
 			tmElements_t tm;
-			RTCread(tm);
+			RTCread(&tm);
 			seriallcd.print((float)getSeconds(tm));
 		}
 			break;
