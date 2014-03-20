@@ -12,9 +12,9 @@
 tmElements_t tm;
 
 
-int RTCread(tmElements_t tm){
+int RTCread(tmElements_t* tm){
 	if (RTC.chipPresent()){
-	return RTC.read(tm);
+	return RTC.read(*tm);
 	}
 	else{
 		return 0;

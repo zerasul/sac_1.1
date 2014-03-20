@@ -41,19 +41,31 @@ and Adrian from Artesanos Industriales del Sur.
 #include "serLCDUtils.h"
 #include "sac_sensors.h"
 
+/*
+ * RELAY PINS
+ */
 #define RELAY1_PIN 5
 #define RELAY2_PIN 6
 #define RELAY3_PIN 4
 
+/*
+ * BUTTONS PINS
+ */
 #define BUTTON_UP_PIN 9
 #define BUTTON_ENTER_PIN 8
 #define BUTTON_DOWN_PIN 7
 
+/**
+ * LOOP DELAY
+ */
 #define LOOP_DELAY    500
 
 
 #define SOIL_MOISTURE_POWER_PIN 3
 
+/**
+ * MAX RELAYS
+ */
 #define MAX_RELAYS 4
 
 
@@ -77,10 +89,9 @@ void  message(char *line1, char *line2);
 
 /* global variables, containing this loop iterations sensor readings */
 /* Caching some initial reading for sensors */
-float cached_moisture    = 111;
-float cached_humidity    = 11;
-float cached_temperature = 23;
-int   cached_water_level = 1;
+
+
+
 
 
 static LogEntry datalog[24*60/LOG_INTERVAL];
@@ -420,7 +431,7 @@ void setup(){
 void loop()
 {
 
-	//TODO: READ RTC
+
 
 
 	  read_sensors ();
@@ -430,7 +441,7 @@ void loop()
 	  handle_events (); /* handle user events, if any */
 
 
-	  draw_ui ();       /* draw ui in current state*/
+	  draw_ui (cached_temperature,cached_humidity);       /* draw ui in current state*/
 
 	  /* XXX
 	  if (menu == main_menu && menu_active == 0)
@@ -442,7 +453,7 @@ void loop()
 	        {
 	          delay (LOOP_DELAY/MENU_SPEEDUP);
 	          handle_events (); /* handle user events, if any */
-	          draw_ui ();       /* draw ui in current state*/
+	          draw_ui (cached_temperature,cached_humidity);       /* draw ui in current state*/
 	        }
 	    }
 }
