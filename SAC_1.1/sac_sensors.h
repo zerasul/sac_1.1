@@ -75,7 +75,7 @@ unsigned char read_ahts_dat() {
 }
 
 // Function to process AHTS data and read it.
-// datas is i/o parameter with [ humdity, temperature ].
+// datas is i/o parameter with [ humidity, temperature ].
 void aths_read_data(float *hum_out, float *temp_out) {
   unsigned char ahts_dat[5];
   //unsigned char ahts_in;
@@ -134,9 +134,9 @@ void aths_read_data(float *hum_out, float *temp_out) {
   if (temp_out) *temp_out = temperature;
 }
 /**
- * Read the data from moisure.
+ * Read the data from moisture.
  *
- * returns the moisure data.
+ * returns the moisture data.
  */
 float moisture_read()
 {
@@ -216,4 +216,25 @@ float getTemp(){
 
   return TemperatureSum;
 
+}
+
+int getWaterFlow(){
+	//TODO
+}
+int setWaterFlow_diameter(){
+	//TODO
+	int water_diameter = 16//TODO;
+}
+int getWaterFlow_diameter(int water_diameter){
+	int waterFlow_diameter = water_diameter;
+	return waterFlow_diameter;
+}
+
+#define watering_time = 60;
+double getWater_consumption(int waterflow_diameter double watering_time){
+	double water_consumption = waterflow_diameter * watering_time;
+	return water_consumption;
+}
+boolean getWaterLevel(){
+	//TODO
 }

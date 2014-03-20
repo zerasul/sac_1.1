@@ -73,11 +73,6 @@ and Adrian from Artesanos Industriales del Sur.
 // http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor
 #define MOISTURE_PIN A3
 
-// Define min and max hum for soil (MOISTURE).
-#define soil_moisture_MIN 45
-#define soil_moisture_MAX 80
-
-
 
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2
