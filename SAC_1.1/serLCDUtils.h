@@ -268,24 +268,15 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 	seriallcd.print(translate(S_LENGTH_SEC));
 	seriallcd.setCursor(2,13);
 	seriallcd.print(pump_cycle_length);
-
+	seriallcd.setCursor(2,15);
+	seriallcd.print(S_ON);
 
 	seriallcd.print(temperature);
 	seriallcd.print("C");
 
-//  LCD.setCursor(0, 1);
-
 	seriallcd.print("% HR");
 	seriallcd.setCursor(0, 1);
 	seriallcd.print(translate(S_S));
-
-
-	seriallcd.setCursor(16, 1);
-	seriallcd.print("[");
-	seriallcd.setCursor(18, 1);
-	seriallcd.print(moisture);
-	seriallcd.setCursor(19, 1);
-	seriallcd.print("]");
 
 	{
 		Relay *light = find_relay(LIGHT);
