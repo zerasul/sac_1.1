@@ -241,3 +241,29 @@ double getWater_consumption(int waterflow_diameter double watering_time){
 boolean getWaterLevel(){
 	//TODO
 }
+
+
+// reading liquid flow rate using Seeeduino and Water Flow Sensor from Seeedstudio.com
+
+volatile int NbTopsFan; //measuring the rising edges of the signal
+int Calc;
+int hallsensor = 2;    //The pin location of the sensor
+
+void rpm ()     //This is the function that the interupt calls
+{
+  NbTopsFan++;  //This function measures the rising and falling edge of the hall effect sensors signal
+}
+
+// the loop() method runs over and over again,
+// as long as the Arduino has power
+float getFlowRate ()
+{
+  NbTopsFan = 0;   //Set NbTops to 0 ready for calculations
+  sei();      //Enables interrupts
+  delay (1000);   //Wait 1 second
+  cli();      //Disable interrupts
+  Calc = (NbTopsFan * 7 / 60); //(Pulse frequency x 60) / 7Q, = flow rate in L/min
+  return Calc;
+  /*  Serial.print (Calc, DEC); //Prints the number calculated above
+    Serial.print (" L/min\r\n"); //Prints "L/min" and returns a  new line  */
+}
