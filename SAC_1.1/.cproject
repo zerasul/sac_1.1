@@ -43,6 +43,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/DS1307RTC}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/Time}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/OneWire}&quot;"/>
 								</option>
 								<option id="it.baeyens.avreclipse.compiler.option.def.1485111403" name="Define Syms (-D)" superClass="it.baeyens.avreclipse.compiler.option.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__IN_ECLIPSE__=1"/>
@@ -71,6 +72,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/DS1307RTC}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/Time}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SAC_1.1/OneWire}&quot;"/>
 								</option>
 								<option id="it.baeyens.avreclipse.cppcompiler.option.def.479432623" name="Define Syms (-D)" superClass="it.baeyens.avreclipse.cppcompiler.option.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__IN_ECLIPSE__=1"/>
@@ -109,9 +111,10 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Time|Wire|DS1307RTC|serLCD|SoftwareSerial|EEPROM" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="OneWire|Time|Wire|DS1307RTC|serLCD|SoftwareSerial|EEPROM" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DS1307RTC"/>
 						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="EEPROM"/>
+						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="OneWire"/>
 						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SoftwareSerial"/>
 						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Time"/>
 						<entry excluding="?xamples/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Wire"/>

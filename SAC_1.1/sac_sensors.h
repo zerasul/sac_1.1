@@ -256,7 +256,7 @@ void rpm ()     //This is the function that the interupt calls
 
 // the loop() method runs over and over again,
 // as long as the Arduino has power
-float getFlowRate ()
+float getWaterFlowRate ()
 {
   NbTopsFan = 0;   //Set NbTops to 0 ready for calculations
   sei();      //Enables interrupts

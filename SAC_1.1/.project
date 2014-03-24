@@ -38,6 +38,11 @@
 			<locationURI>ArduinoLibPath/EEPROM</locationURI>
 		</link>
 		<link>
+			<name>OneWire</name>
+			<type>2</type>
+			<locationURI>PivateLibPath/OneWire</locationURI>
+		</link>
+		<link>
 			<name>SoftwareSerial</name>
 			<type>2</type>
 			<locationURI>ArduinoLibPath/SoftwareSerial</locationURI>
