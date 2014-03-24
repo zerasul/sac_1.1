@@ -69,6 +69,7 @@ enum {
   S_LOG,
   MIN,
   ST_MAX,
+  CONSUMPTION,
 };
 
 typedef struct {

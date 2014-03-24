@@ -280,6 +280,11 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 
 	seriallcd.print("C");
 
+	/*LAST ROW WILL PRINT WATER CONSUMPTION IN CUBIC METERS*/
+	seriallcd.setCursor(4,0);
+	seriallcd.print(CONSUMPTION);
+
+
 	seriallcd.print("% HR");
 	seriallcd.setCursor(0, 1);
 	seriallcd.print(translate(S_S));

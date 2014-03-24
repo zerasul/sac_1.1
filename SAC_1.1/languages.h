@@ -61,6 +61,8 @@ TranslatedString string_db[]={
   {{"Log"}},
   {{"MIN:"}},  {{"MIN:"}},
   {{"STMAX:"}},  {{"TSMAX:"}},
+  {{"CONSUMPTION:"}},  {{"CONSUMO:"}},
+
 };
 
 int active_language = 0;
