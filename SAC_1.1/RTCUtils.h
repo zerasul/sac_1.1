@@ -27,6 +27,11 @@ int RTCread(tmElements_t* tm){
 		return 0;
 	}
 }
+
+int getTimeElapsed(tmElements_t tmStart, tmElements_t tmEnd){
+	int time_elapsed = tmStart - tmEnd;
+	return time_elapsed;
+}
 int getHour(tmElements_t tm){
 	return tm.Hour;
 }
@@ -45,4 +50,21 @@ int getMonth(tmElements_t tm){
 int getYear(tmElements_t tm){
 	return tm.Year;
 }
+char* getTime(){
+	char* time = "";
+	char* strcpy(time, tm.Hour);
+	char* strcpy(time, ":");
+	char* strcpy(time, tm.Minute);
+	return time;
+}
+char* getDate(){
+	char* date = "";
+	char* strcpy(date, tm.Day);
+	char* strcpy(date, "/");
+	char* strcpy(date, tm.Month);
+	char* strcpy(date, "/");
+	char* strcpy(date, tm.Year);
+	return date;
+}
+
 

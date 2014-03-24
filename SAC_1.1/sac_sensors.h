@@ -47,10 +47,13 @@ float cached_humidity    = 11;
 
 float cached_moisture    = 111;
 
+int cached_lastWaterEvent = 0;
 
-int   cached_water_level = 1;
+int  cached_water_level = 1;
 
 int readingno=0;
+
+#define soil_moisture_MIN 45
 /*----------------------------------------*/
 
 /*---------------Functions Definition------*/

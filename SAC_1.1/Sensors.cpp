@@ -14,6 +14,8 @@
 #define soil_temperature_MAX 40;  //Max temperature for soil, triggers start of watering mode.
 #define water_flow_volume 0; //Total of water used;
 #define water_flow_diameter 16; //Diameter of water entry point.For calculating water consumption.Posible Values 16,32,48 mm.
+#define last_WaterEvent = 0; //Victor arregla este destrozo
+
 
 Sensors::Sensors() {
 	// TODO Auto-generated constructor stub
@@ -23,6 +25,7 @@ Sensors::Sensors() {
 	sensors_values.cached_tempmax = soil_temperature_MAX;
 	sensors_values.cached_flowvolume = water_flow_volume;
 	sensors_values.cached_waterFlowdiameter = water_flow_diameter;
+	sensors_values.cached_lastWaterEvent = last_WaterEvent;//TODO
 }
 
 Sensors::~Sensors() {
@@ -38,5 +41,4 @@ cached_sensors Sensors::read_sensors() {
 
 	/*Calculating Water consumption by multiplying watering pipe diameter with time in watering mode*/
 	sensors_values.cached_flowvolume = getWater_consumption(Waterflow_diameter watering_time);
-
 }

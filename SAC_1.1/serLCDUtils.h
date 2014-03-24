@@ -6,6 +6,8 @@
  */
 #include "serLCD.h"
 #include "RTCUtils.h"
+#include "sac_sensors.h"
+#include "Var.h"
 
 #define LCD_PIN 11
 
@@ -31,7 +33,7 @@ int lights_duration[MAX_LIGHTS] = { 0, };
 void clearScreen() {
 	//clears the screen, you will use this a lot!
 	LCD_SENDCOMMAND(0x01);
-
+2
 }
 
 //-------------------------------------------------------------------------------------------
@@ -236,21 +238,48 @@ void message(char *line1, char *line2) {
 
 void print_time(int minutes_since_midnight);
 
-void draw_status(int time, int moisture, int temperature, int humidity) {
-	seriallcd.setCursor(6, 0);
-	/*LCD.print(translate(S_A));*/
+void draw_status(int time, int moisture, int temperature, int humidity, char* time, char* date) {
+	/*Printing Date & Time in first Row of status screen*/
+	seriallcd.setCursor(0,1);
+	seriallcd.print(getTime());
+	seriallcd.setCursor(0,8);
+	seriallcd.print(getDate());
+
+	/*Printing Soil humidity Values in second row of status screen*/
+	seriallcd.setCursor(1,0);
+	seriallcd.print(translate(S_S));
+	seriallcd.setCursor(1,4);
+	seriallcd.print(moisture_target);
+	seriallcd.setCursor(1,6);
+	seriallcd.print("% ");
+	seriallcd.setCursor(1, 7);
+	//TODO  Falta imprimir el minimo tomado por entrada de usuario
+	seriallcd.print(translate(MIN));
+	seriallcd.setCursor(1,11);
+	seriallcd.print(soil_moisture_MIN);
+	seriallcd.setCursor(1,12);
+	seriallcd.Print("[");
+	seriallcd.setCursor(1,14);
+	seriallcd.print(moisture);
+	seriallcd.setCursor(1,16);
+	seriallcd.Print("]");
+	/*Third Row will be for printing data related to watering Cycles*/
+	seriallcd.setCursor(2,0);
+	seriallcd.print(translate(S_LENGTH_SEC));
+	seriallcd.setCursor(2,13);
+	seriallcd.print(pump_cycle_length);
+
+
 	seriallcd.print(temperature);
 	seriallcd.print("C");
 
 //  LCD.setCursor(0, 1);
-	seriallcd.print(humidity);
+
 	seriallcd.print("% HR");
 	seriallcd.setCursor(0, 1);
 	seriallcd.print(translate(S_S));
-	seriallcd.print(moisture_target);
-	seriallcd.print("% ");
-	seriallcd.setCursor(8, 1);
-	seriallcd.print(translate(MIN));
+
+
 	seriallcd.setCursor(16, 1);
 	seriallcd.print("[");
 	seriallcd.setCursor(18, 1);
@@ -378,7 +407,7 @@ void draw_ui(float cached_temperature, float cached_humidity) {
 	switch (mi->type) {
 	case STATUS:
 		draw_status(get_minutes_since_midnight(), moisture_read(),
-				cached_temperature, cached_humidity);
+				cached_temperature, cached_humidity, char* time, char* date);
 		clearScreen();
 		return;
 

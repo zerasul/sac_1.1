@@ -40,7 +40,8 @@ and Adrian from Artesanos Industriales del Sur.
 #include "EEPROMUtils.h"
 #include "serLCDUtils.h"
 #include "sac_sensors.h"
-
+#include "RTCUtils.h"
+#include "sensors.cpp"
 /*
  * RELAY PINS
  */
@@ -60,9 +61,6 @@ and Adrian from Artesanos Industriales del Sur.
  */
 #define LOOP_DELAY    500
 
-
-#define SOIL_MOISTURE_POWER_PIN 3
-
 /**
  * MAX RELAYS
  */
@@ -72,13 +70,10 @@ and Adrian from Artesanos Industriales del Sur.
 // Pin for soil moisture sensor (MOISTURE).
 // http://www.seeedstudio.com/wiki/Grove_-_Moisture_Sensor
 #define MOISTURE_PIN A3
-
+#define SOIL_MOISTURE_POWER_PIN 3
 
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2
-
-
-
 
 void  message(char *line1, char *line2);
 
@@ -86,13 +81,7 @@ void  message(char *line1, char *line2);
 /* Caching some initial reading for sensors */
 
 
-
-
-
 static LogEntry datalog[24*60/LOG_INTERVAL];
-
-
-
 
 Relay *find_relay (int role);
 
@@ -213,6 +202,7 @@ void relay_off (Relay *relay)
 
 }
 float elapsed_minutes(int time1, int time2);
+
 void update_relay_state (void)
 {
   Relay *water       = find_relay (IRRIGATION);
@@ -370,12 +360,14 @@ void update_relay_state (void)
                   }
             }
 
-          if (moisture > moisture_target + moisture_range/2)
+          //if (moisture > moisture_target + moisture_range/2)
+          if (moisture == soil_moisture_MAX)
             relay_off (water);
         }
       else
         {
-          if (moisture < moisture_target - moisture_range/2)
+          //if (moisture < moisture_target - moisture_range/2)
+    	  if (moisture < soil_moisture_MIN)
             relay_on (water);
           last_water_event = get_minutes_since_midnight ();
         }
@@ -425,16 +417,11 @@ void setup(){
 // The loop function is called in an endless loop
 void loop()
 {
-
-
-
-
 	  read_sensors ();
 	  store_log ();
 	  update_relay_state ();
 
 	  handle_events (); /* handle user events, if any */
-
 
 	  draw_ui (cached_temperature,cached_humidity);       /* draw ui in current state*/
 

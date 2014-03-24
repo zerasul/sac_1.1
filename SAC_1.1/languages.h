@@ -46,7 +46,7 @@ TranslatedString string_db[]={
   {{"TEMPERATURE",     "TEMPERATURA"}},
 
   {{"WATERING",      "RIEGO"}},
-  {{"CICLES (sec):",  "CICLOS (seg):"}},
+  {{"CICLES:",  	"CICLOS:"}},
 
   {{"RETURN TO",       "VOLVER"}},
   {{"MAIN MENU",       "MENU PRINCIPAL"}},

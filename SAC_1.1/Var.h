@@ -11,7 +11,7 @@ float pump_cycle_length    = 0;
 float temperature_target      = 0;
 float temperature_range       = 1;
 float moisture_target      = 0;
-float moisture_range       = 10;
+float moisture_range       = 10;//candidato a ser destruido
 
 
 float humidity_target = 0;
