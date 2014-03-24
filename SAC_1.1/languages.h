@@ -60,6 +60,7 @@ TranslatedString string_db[]={
   {{"Hysteresis: ",  }},
   {{"Log"}},
   {{"MIN:"}},  {{"MIN:"}},
+  {{"STMAX:"}},  {{"TSMAX:"}},
 };
 
 int active_language = 0;

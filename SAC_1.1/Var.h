@@ -68,6 +68,7 @@ enum {
   S_RANGE,
   S_LOG,
   MIN,
+  ST_MAX,
 };
 
 typedef struct {
