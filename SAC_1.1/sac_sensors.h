@@ -247,7 +247,7 @@ boolean getWaterLevel(){
 
 volatile int NbTopsFan; //measuring the rising edges of the signal
 int Calc;
-int hallsensor = 2;    //The pin location of the sensor
+#define hallsensor 2;    //The pin location of the sensor
 
 void rpm ()     //This is the function that the interupt calls
 {
