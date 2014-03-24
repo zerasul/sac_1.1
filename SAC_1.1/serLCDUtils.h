@@ -269,14 +269,14 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 	seriallcd.setCursor(2,13);
 	seriallcd.print(pump_cycle_length);
 	seriallcd.setCursor(2,15);
-	seriallcd.print(S_ON);
+	seriallcd.print(translate(S_ON));
 	/*Fourth row is going to print info related to Soil temperature*/
 	seriallcd.setCursor(3,0);
-	seriallcd.Print(ST_MAX);
+	seriallcd.Print(translate(ST_MAX));
 	seriallcd.setCursor(3,6);
 	seriallcd.print(temperature);
 	seriallcd.setCursor(3,8);
-	seriallcd.Print(MIN);
+	seriallcd.Print(translate(MIN));
 
 	seriallcd.print("C");
 
