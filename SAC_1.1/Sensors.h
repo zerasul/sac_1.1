@@ -8,6 +8,14 @@
 #ifndef SENSORS_H_
 #define SENSORS_H_
 
+
+
+enum _FLOW_SIZE{
+	FLOW_SIZE_16,
+	FLOW_SIZE_32,
+	FLOW_SIZE_48
+};
+
 // Define min and max hum for soil (MOISTURE).
 
 typedef struct {
@@ -72,7 +80,7 @@ typedef struct {
 
 class Sensors {
 public:
-	Sensors(float,float,float,float,float);
+	Sensors(float,float,float,float,_FLOW_SIZE);
 	virtual ~Sensors();
 	State read_sensors();
 private:
