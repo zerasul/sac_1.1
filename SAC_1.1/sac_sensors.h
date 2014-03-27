@@ -221,18 +221,6 @@ float getTemp(){
 
 }
 
-int getWaterFlow(){
-	//TODO
-}
-int setWaterFlow_diameter(){
-	//TODO
-	int water_diameter = 16//TODO;
-}
-int getWaterFlow_diameter(int water_diameter){
-	int waterFlow_diameter = water_diameter;
-	return waterFlow_diameter;
-}
-
 #define watering_time = 60;
 double getWater_consumption(int waterflow_diameter double watering_time){
 	double water_consumption = waterflow_diameter * watering_time;
