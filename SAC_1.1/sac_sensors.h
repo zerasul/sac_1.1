@@ -123,7 +123,7 @@ void aths_read_data(float *hum_out, float *temp_out) {
 
   if(ahts_dat[4]!= ahts_check_sum)
   {
-    message ("AHTS", "checksum error");
+    message ("AHTS", "checksum error", " ", " ");
     return;
   }
   humdity=((float)(ahts_dat[0]*256+ahts_dat[1]))/10.0;
