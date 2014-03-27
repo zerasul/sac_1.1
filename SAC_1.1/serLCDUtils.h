@@ -4,7 +4,7 @@
  *  Created on: 16/03/2014
  *      Author: dcuevas
  */
-#include "SerLCD.h"
+#include "serLCD.h"
 #include "RTCUtils.h"
 #include "sac_sensors.h"
 #include "Var.h"
@@ -14,32 +14,142 @@
 #define MENU_SPEEDUP  3
 #define MENU_TIMEOUT  120
 
-#define LCD_COLS 20
-#define LCD_ROWS 4
-
 /* distance between datalog entries in minutes */
 #define LOG_INTERVAL 60
 
-SoftwareSerial SSerial(0,LCD_PIN);
+serLCD seriallcd(LCD_PIN);
 
-SerLCD Lcd(SSerial,LCD_COLS,LCD_ROWS);
-
-
-
+//NUEVA LIBRERIA LCD CON FUNCIONES PREDEFINIDAS
+//
+#define LCD_SENDCOMMAND(command){seriallcd.print(0xFE); seriallcd.print(command); }
+#define LCD_SPECIALCOMMAND(scommand){seriallcd.print(0x7C); seriallcd.print(scommand); }
+//-------------------------------------------------------------------------------------------
 
 #define MAX_LIGHTS 1
 
 int lights_start[MAX_LIGHTS] = { 0, };
 int lights_duration[MAX_LIGHTS] = { 0, };
 
+void clearScreen() {
+	//clears the screen, you will use this a lot!
+	LCD_SENDCOMMAND(0x01);
+2
+}
 
+//-------------------------------------------------------------------------------------------
+void moveCursorRightOne() {
+	//moves the cursor right one space
+	LCD_SENDCOMMAND(0x14);
+}
+//-------------------------------------------------------------------------------------------
+void moveCursorLeftOne() {
+	//moves the cursor left one space
+	LCD_SENDCOMMAND(0x10);
+}
+//-------------------------------------------------------------------------------------------
+void scrollRight() {
+	//same as moveCursorRightOne
+	LCD_SENDCOMMAND(0x1C);
+}
+//-------------------------------------------------------------------------------------------
+void scrollLeft() {
+	//same as moveCursorLeftOne
+	LCD_SENDCOMMAND(0x18);
+}
+//-------------------------------------------------------------------------------------------
+void turnDisplayOff() {
+	//this tunrs the display off, but leaves the backlight on.
+	LCD_SENDCOMMAND(0x08);
+}
+//-------------------------------------------------------------------------------------------
+void turnDisplayOn() {
+	//this turns the display back ON
+	LCD_SENDCOMMAND(0x0C);
+}
+//-------------------------------------------------------------------------------------------
+void underlineCursorOn() {
+	//turns the underline cursor on
+	LCD_SENDCOMMAND(0x0E);
+}
+//-------------------------------------------------------------------------------------------
+/*void underlineCursorOff()
+ {
+ //turns the underline cursor off
+ LCD.print(0xFE); //command flag
+ LCD.print(12); // 0x0C
+ }*/
+//-------------------------------------------------------------------------------------------
+void boxCursorOn() {
+	//this turns the box cursor on
+	LCD_SENDCOMMAND(0x0D);
+}
+//-------------------------------------------------------------------------------------------
+/*void boxCursorOff()
+ {
+ //this turns the box cursor off
+ LCD.print(0xFE); //command flag
+ LCD.print(12); // 0x0C
+ }*/
+//-------------------------------------------------------------------------------------------
+void toggleSplash() {
+	//this toggles the spalsh screenif off send this to turn onif on send this to turn off
+	LCD_SPECIALCOMMAND(0x09);
+}
+//-------------------------------------------------------------------------------------------
+int backlight(int brightness) // 128 = OFF, 157 = Fully ON, everything inbetween = varied brightnbess
+		{
+	//this function takes an int between 128-157 and turns the backlight on accordingly
+	LCD_SPECIALCOMMAND(brightness);
+}
 
+//-------------------------------------------------------------------------------------------
+void counter() {
+	//this function prints a simple counter that counts to 10
+	clearScreen();
+	for (int i = 0; i <= 10; i++) {
+		seriallcd.print("Counter = ");
+		seriallcd.print(i, DEC);
+		delay(500);
+		clearScreen();
+	}
+}
+//-------------------------------------------------------------------------------------------
+void tempAndHumidity() {
+	//this function shows how you could read the data from a temerature and humidity
+	//sensro and then print that data to the SerLCD.
 
+	//these could be varaibles instead of static numbers
+	float tempF = 77.0;
+	float tempC = 25.0;
+	float humidity = 67.0;
 
-
-
-
-
+	clearScreen();
+	seriallcd.setCursor(0, 1);
+	seriallcd.print(" Temp = ");
+	seriallcd.print((long) tempF, DEC);
+	seriallcd.print("F ");
+	seriallcd.print((long) tempC, DEC);
+	seriallcd.print("C");
+	seriallcd.setCursor(1, 0);
+	seriallcd.print(" Humidity = ");
+	seriallcd.print((long) humidity, DEC);
+	seriallcd.print("%");
+	delay(2500);
+}
+//-------------------------------------------------------------------------------------------
+void backlight() {
+	//this function shows the different brightnesses to which the backlight can be set
+	clearScreen();
+	for (int i = 128; i < 158; i += 2) // 128-157 are the levels from off to full brightness
+			{
+		backlight(i);
+		delay(100);
+		seriallcd.print("Backlight = ");
+		seriallcd.print(i, DEC);
+		delay(500);
+		clearScreen();
+	}
+}
 
 /*Menus*/
 
@@ -89,13 +199,13 @@ void enter_menu(MenuItem *new_menu) {
 	menu_depth++;
 	menu = new_menu;
 	menu_active = 0;
-	Lcd.clear();
+	clearScreen();
 }
 
 void return_home(void) {
 	if (menu == main_menu && menu_active == 0)
 		return;
-	Lcd.clear();
+	clearScreen();
 	menu = main_menu;
 	menu_active = 0;
 }
@@ -104,95 +214,87 @@ void go_back(void) {
 	menu_depth--;
 	menu = prev_menu[menu_depth];
 	menu_active = prev_menu_active[menu_depth];
-	Lcd.clear();
+	clearScreen();
 }
 
 /****/
 
 int message_ttl = 0;
 
-void message(char *line1, char *line2, char* line3, char* line4) {
+void message(char *line1, char *line2) {
 
-	Lcd.clear();
-
-	Lcd.setPosition(0, 0);
-
-	Lcd.print(line1);
-
-	Lcd.setPosition(1, 0);
+	clearScreen();
+//  LCD.setCursor(0,0);
+	seriallcd.setCursor(0, 1);
+//  LCD.print(line1);
+	seriallcd.print(line1);
+//  LCD.setCursor(0,1);
+	seriallcd.setCursor(1, 0);
 	if (line2)
-		Lcd.print(line2);
-	Lcd.setPosition(2,0);
-	if(line3)
-		Lcd.print(line3);
-	Lcd.setPosition(2,0);
-		if(line4)
-			Lcd.print(line4);
-
+		seriallcd.print(line2);
+	clearScreen();
+	message_ttl = 3;
 }
 
 void print_time(int minutes_since_midnight);
 
 void draw_status(int time, int moisture, int temperature, int humidity, char* time, char* date) {
 	/*Printing Date & Time in first Row of status screen*/
-	Lcd.setPosition(0,1);
-	Lcd.print(getTime());
-	Lcd.setPosition(0,8);
-	Lcd.print(getDate());
+	seriallcd.setCursor(0,1);
+	seriallcd.print(getTime());
+	seriallcd.setCursor(0,8);
+	seriallcd.print(getDate());
 
 	/*Printing Soil humidity Values in second row of status screen*/
-	Lcd.setPosition(1,0);
-	Lcd.print(translate(S_S));
-	Lcd.setPosition(1,4);
-	Lcd.print(moisture_target);//TODO:Poner por parametro
-	Lcd.setPosition(1,6);
-	Lcd.print("% ");
-	Lcd.setPosition(1, 7);
+	seriallcd.setCursor(1,0);
+	seriallcd.print(translate(S_S));
+	seriallcd.setCursor(1,4);
+	seriallcd.print(moisture_target);
+	seriallcd.setCursor(1,6);
+	seriallcd.print("% ");
+	seriallcd.setCursor(1, 7);
 	//TODO  Falta imprimir el minimo tomado por entrada de usuario
-	Lcd.print(translate(MIN));
-	Lcd.setPosition(1,11);
-	Lcd.print(soil_moisture_MIN);//TODO: Por parametro
-	Lcd.setPosition(1,12);
-	Lcd.print("[");
-	Lcd.setPosition(1,14);
-	Lcd.print(moisture);
-	Lcd.setPosition(1,16);
-	Lcd.print("]");
+	seriallcd.print(translate(MIN));
+	seriallcd.setCursor(1,11);
+	seriallcd.print(soil_moisture_MIN);
+	seriallcd.setCursor(1,12);
+	seriallcd.Print("[");
+	seriallcd.setCursor(1,14);
+	seriallcd.print(moisture);
+	seriallcd.setCursor(1,16);
+	seriallcd.Print("]");
 	/*Third Row will be for printing data related to watering Cycles*/
-	Lcd.setPosition(2,0);
-	Lcd.print(translate(S_LENGTH_SEC));
-	Lcd.setPosition(2,13);
-	Lcd.print(pump_cycle_length);//TODO: Poner longitud ciclo por intervalos
-	Lcd.setPosition(2,15);
-	Lcd.print(S_ON);
-	Lcd.setPosition(2,18);
-	//Lcd.print(cycle_percent); TODO: tomar por parametro
+	seriallcd.setCursor(2,0);
+	seriallcd.print(translate(S_LENGTH_SEC));
+	seriallcd.setCursor(2,13);
+	seriallcd.print(pump_cycle_length);
+	seriallcd.setCursor(2,15);
+	seriallcd.print(translate(S_ON));
 	/*Fourth row is going to print info related to Soil temperature*/
+	seriallcd.setCursor(3,0);
+	seriallcd.Print(translate(ST_MAX));
+	seriallcd.setCursor(3,6);
+	seriallcd.print(temperature);
+	seriallcd.setCursor(3,8);
+	seriallcd.Print(translate(MIN));
 
-	Lcd.setPosition(3,0);
-	Lcd.print(ST_MAX);
-	Lcd.setPosition(3,6);
-	//Lcd.print(temperaturemax); TODO: Tomar por parametro temp max.
-
-	Lcd.setPosition(3,8);
-	Lcd.print(MIN);
-	//Lcd.print(temperaturemin); TODO: Tomar por parametro temp min.
-	Lcd.setPosition(3,15);
-	Lcd.print(temperature);
-	Lcd.print("C");
+	seriallcd.print("C");
 
 	/*LAST ROW WILL PRINT WATER CONSUMPTION IN CUBIC METERS*/
-	Lcd.setPosition(4,0);
-	Lcd.print(translate(CONSUMPTION));
+	seriallcd.setCursor(4,0);
+	seriallcd.print(CONSUMPTION);
 
-    Lcd.print(getWaterFlowRate());
-	Lcd.print("M3");
+
+	seriallcd.print("% HR");
+	seriallcd.setCursor(0, 1);
+	seriallcd.print(translate(S_S));
+
 	{
 		Relay *light = find_relay(LIGHT);
 		if (light) {
-			Lcd.setPosition(6, 1);
+			seriallcd.setCursor(6, 1);
 			if (light->state == RELAY_ON)
-				Lcd.print(translate(S_L));
+				seriallcd.print(translate(S_L));
 		}
 	}
 
@@ -200,14 +302,14 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 		Relay *heating = find_relay(HEATING);
 		Relay *cooling = find_relay(COOLING);
 		if (heating) {
-			Lcd.setPosition(8, 1);
+			seriallcd.setCursor(8, 1);
 			if (heating->state == RELAY_ON)
-				Lcd.print("+");
+				seriallcd.print("+");
 			else {
 				if (cooling && cooling->state == RELAY_ON)
-					Lcd.print("-");
+					seriallcd.print("-");
 				else
-					Lcd.print(" ");
+					seriallcd.print(" ");
 			}
 		}
 	}
@@ -216,39 +318,39 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 		Relay *ventilation = find_relay(VENTILATION);
 		Relay *humidifier = find_relay(HUMIDIFIER);
 		if (ventilation && ventilation->state == RELAY_ON) {
-			Lcd.setPosition(3, 1);
-			Lcd.print(translate(S_V));
+			seriallcd.setCursor(3, 1);
+			seriallcd.print(translate(S_V));
 		} else if (humidifier && humidifier->state == RELAY_ON) {
-			Lcd.setPosition(3, 1);
-			Lcd.print(translate(S_H));
+			seriallcd.setCursor(3, 1);
+			seriallcd.print(translate(S_H));
 		}
 	}
 
 	{
 		Relay *water = find_relay(IRRIGATION);
 		if (water) {
-			Lcd.setPosition(0, 1);
+			seriallcd.setCursor(0, 1);
 			if (cached_water_level)
-				Lcd.print("     "); /* LCD.print(translate(S_WA)); */
+				seriallcd.print("     "); /* LCD.print(translate(S_WA)); */
 			else
-				Lcd.print(translate(S_WA));
+				seriallcd.print(translate(S_WA));
 
-			Lcd.setPosition(0, 1);
+			seriallcd.setCursor(0, 1);
 			switch (water->state) {
 			case RELAY_ON:
-				Lcd.print(translate(S_PU));
+				seriallcd.print(translate(S_PU));
 				break;
 			case RELAY_OFF:
-				Lcd.print("  ");
+				seriallcd.print("  ");
 				break;
 			case RELAY_WAITING:
-				Lcd.print(translate(S_PU));
+				seriallcd.print(translate(S_PU));
 				break;
 			}
 		}
 	}
 
-	Lcd.setPosition(0, 0);
+	seriallcd.setCursor(0, 0);
 	{
 		print_time(time);
 	}
@@ -256,20 +358,20 @@ void draw_status(int time, int moisture, int temperature, int humidity, char* ti
 
 int logno = 0;
 void draw_log(void) {
-	Lcd.setPosition(0, 0);
+	seriallcd.setCursor(0, 0);
 	print_time(logno * LOG_INTERVAL);
-	Lcd.print(" ");
-	Lcd.print(datalog[logno].moisture);
-	Lcd.print("%  ");
+	seriallcd.print(" ");
+	seriallcd.print(datalog[logno].moisture);
+	seriallcd.print("%  ");
 
-	Lcd.setPosition(0, 1);
+	seriallcd.setCursor(0, 1);
 	print_time((logno + 1) * LOG_INTERVAL);
-	Lcd.print(" ");
+	seriallcd.print(" ");
 	if (logno + 1 >= 24 * 60 / LOG_INTERVAL)
-		Lcd.print(datalog[0].moisture);
+		seriallcd.print(datalog[0].moisture);
 	else
-		Lcd.print(datalog[logno + 1].moisture);
-	Lcd.print("%  ");
+		seriallcd.print(datalog[logno + 1].moisture);
+	seriallcd.print("%  ");
 
 }
 int offset = 0;
@@ -300,28 +402,28 @@ void draw_ui(float cached_temperature, float cached_humidity) {
 		message_ttl--;
 		if (message_ttl > 0)
 			return;
-		Lcd.clear();
+		clearScreen();
 	}
-	Lcd.setPosition(0, 0);
+	seriallcd.setCursor(0, 0);
 
 	switch (mi->type) {
 	case STATUS:
 		draw_status(get_minutes_since_midnight(), moisture_read(),
 				cached_temperature, cached_humidity, char* time, char* date);
-		Lcd.clear();
+		clearScreen();
 		return;
 
 	case LOG:
 		draw_log();
-		Lcd.clear();
+		clearScreen();
 		return;
 
 	default:
 
-		Lcd.print(translate(mi->label));
-		Lcd.setPosition(0, 1);
+		seriallcd.print(translate(mi->label));
+		seriallcd.setCursor(0, 1);
 		if (mi->label2)
-			Lcd.print(translate(mi->label2));
+			seriallcd.print(translate(mi->label2));
 
 		break;
 	}
@@ -342,14 +444,14 @@ void draw_ui(float cached_temperature, float cached_humidity) {
 			}
 			break;
 		case UPTIME: {
-			Lcd.setPosition(0, 1);
+			seriallcd.setCursor(0, 1);
 			tmElements_t tm;
 			RTCread(&tm);
-			Lcd.print((float)getSeconds(tm));
+			seriallcd.print((float)getSeconds(tm));
 		}
 			break;
 		case TEXT:
-			Lcd.print((char *) mi->data);
+			seriallcd.print((char *) mi->data);
 			break;
 		case NUMBER:
 			if (is_editing) {
@@ -360,64 +462,64 @@ void draw_ui(float cached_temperature, float cached_humidity) {
 				tens /= 10;
 
 				if (is_editing == 1) {
-					Lcd.print(tens);
-					Lcd.print(ones);
+					seriallcd.print(tens);
+					seriallcd.print(ones);
 				} else if (is_editing == 2) {
-					Lcd.print(tens);
-					Lcd.print(ones);
+					seriallcd.print(tens);
+					seriallcd.print(ones);
 				} else
-					Lcd.print((*(float*) (mi->data)));
+					seriallcd.print((*(float*) (mi->data)));
 			} else
-				Lcd.print((*(float*) (mi->data)));
+				seriallcd.print((*(float*) (mi->data)));
 			break;
 
 		case SOIL_CALIBRATE:
 			if (is_editing)
-				Lcd.print((*(float*) (mi->data)));
+				seriallcd.print((*(float*) (mi->data)));
 			else
-				Lcd.print((*(float*) (mi->data)));
-			/*Lcd.print("s ");*/
-			Lcd.print(" -ENTER- ");
-			Lcd.print(cached_moisture);
-			Lcd.print("   ");
-			/*Lcd.print("v ");*/
-			/*Lcd.print(moisture_read());*/
+				seriallcd.print((*(float*) (mi->data)));
+			/*seriallcd.print("s ");*/
+			seriallcd.print(" -ENTER- ");
+			seriallcd.print(cached_moisture);
+			seriallcd.print("   ");
+			/*seriallcd.print("v ");*/
+			/*seriallcd.print(moisture_read());*/
 
 			break;
 
 		case ROLE: {
 			int role = (*((int*) (mi->data)));
-			Lcd.print("[");
+			seriallcd.print("[");
 			if (is_editing)
-				Lcd.print(translate(roles[role]));
+				seriallcd.print(translate(roles[role]));
 			else
-				Lcd.print(translate(roles[role]));
-			Lcd.print("]");
+				seriallcd.print(translate(roles[role]));
+			seriallcd.print("]");
 		}
 			break;
 
 		case LANGUAGE: {
-			Lcd.print("[");
+			seriallcd.print("[");
 			if (is_editing)
-				Lcd.print(translate(S_ENGLISH));
+				seriallcd.print(translate(S_ENGLISH));
 			else
-				Lcd.print(translate(S_ENGLISH));
-			Lcd.print("]");
+				seriallcd.print(translate(S_ENGLISH));
+			seriallcd.print("]");
 		}
 			break;
 
 		case ONOFF:
 			if (*((int*) (mi->data)))
-				Lcd.print(translate(S_ENABLED));
+				seriallcd.print(translate(S_ENABLED));
 			else
-				Lcd.print(translate(S_DISABLED));
+				seriallcd.print(translate(S_DISABLED));
 			break;
 
 		default:
 			break;
 		}
 
-	Lcd.clear();
+	clearScreen();
 }
 
 void reset_lights(void) {
@@ -496,13 +598,13 @@ void editing_handle_events(int event) {
 				(*val) -= 1;
 				if (*val < 0)
 					*val = roles_c - 1;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case BUTTON_DOWN:
 				(*val) += 1;
 				if ((*val) >= roles_c)
 					*val = 0;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case IDLE:
 			case TIMEOUT:
@@ -518,13 +620,13 @@ void editing_handle_events(int event) {
 				logno--;
 				if (logno < 0)
 					logno = (24 * 60 / LOG_INTERVAL) - 1;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case BUTTON_DOWN:
 				logno++;
 				if (logno >= 24 * 60 / LOG_INTERVAL)
 					logno = 0;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case IDLE:
 			case TIMEOUT:
@@ -541,13 +643,13 @@ void editing_handle_events(int event) {
 				(*val) -= 1;
 				if (*val < 0)
 					*val = roles_c - 1;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case BUTTON_DOWN:
 				(*val) += 1;
 				if ((*val) >= MAX_LANGUAGE)
 					*val = 0;
-				Lcd.clear();
+				clearScreen();
 				break;
 			case IDLE:
 			case TIMEOUT:
@@ -637,7 +739,7 @@ void handle_events(void) {
 
 	switch (event) {
 	case BUTTON_ENTER:
-		Lcd.print("");
+		seriallcd.print("");
 		menu_enter();
 		break;
 	case BUTTON_UP:
@@ -645,15 +747,15 @@ void handle_events(void) {
 		if (menu_active < 0)
 			while (menu[menu_active + 1].label)
 				menu_active++;
-		Lcd.print("");
-		Lcd.clear();
+		seriallcd.print("");
+		clearScreen();
 		break;
 	case BUTTON_DOWN:
 		menu_active++;
 		if (menu[menu_active].label == 0)
 			menu_active = 0;
-		Lcd.print("");
-		Lcd.clear();
+		seriallcd.print("");
+		clearScreen();
 		break;
 	case IDLE:
 		idle_count++;
@@ -664,7 +766,7 @@ void handle_events(void) {
 			break; /* do not jump back to start when editing */
 		/* fallthrough */
 	case TIMEOUT:
-		Lcd.print("OFF");
+		seriallcd.print("OFF");
 		return_home();
 		break;
 	default:
