@@ -17,10 +17,9 @@
 
 #define last_WaterEvent  0; //Victor arregla este destrozo
 
-#define FLOW_SIZE_16 16
-#define FLOW_SIZE_32 32
-#define FLOW_SIZE_48 48
-Sensors::Sensors(float moisture_min,float moisture_max, float temps_min,float temps_max,float flow_diameter) {
+
+
+Sensors::Sensors(float moisture_min,float moisture_max, float temps_min,float temps_max,_FLOW_SIZE flow_diameter) {
 
 	sensors_values.cached_maxmoisture = moisture_min;
 	sensors_values.cached_minmoisture = moisture_max;
@@ -42,13 +41,11 @@ State Sensors::read_sensors() {
     State current_state;
     float curr_moisture=moisture_read();
     float curr_temps= getTemp();
+    float curr_flowrate=getWaterFlowRate();
     sensors_values.cached_moisture=curr_moisture;
     sensors_values.cached_temperature=curr_temps;
 	sensors_values.cached_waterlevel = getWaterLevel(); // Boolean indicates if we have water or not.
-
-	/*Calculating Water consumption by multiplying watering pipe diameter with time in watering mode*/
-
-	sensors_values.cached_flowvolume = getWater_consumption(Waterflow_diameter, watering_time);
+	sensors_values.cached_flowvolume+=curr_flowrate/60000;//FlowRate(L/m) to FlowRate(m3/s).
 
 	/* set the state */
 
