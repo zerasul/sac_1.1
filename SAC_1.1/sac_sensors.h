@@ -38,6 +38,16 @@ int DS18S20_Pin = A1; //DS18S20 Signal pin on Analogic 1
 //Temperature chip i/o
 OneWire ds(DS18S20_Pin);  // on pin A1
 
+
+//MIN & MAX Initial values for soil moisture and water_flow
+
+#define soil_moisture_MIN 45 // Soil moisture min desired value
+#define soil_moisture_MAX 80 //Soil Moisture Max desired value
+#define soil_temperature_MIN 5;  //Min temperature for soil, triggers stop of watering mode.
+#define soil_temperature_MAX 40;  //Max temperature for soil, triggers start of watering mode.
+#define water_flow_volume 0; //Total of water used;
+#define last_WaterEvent  0; //Last watering Event
+
 /*------------Global Variables-------------*/
 float moisture_calib       = 500;
 

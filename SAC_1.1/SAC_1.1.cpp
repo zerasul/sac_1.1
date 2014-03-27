@@ -41,7 +41,7 @@ and Adrian from Artesanos Industriales del Sur.
 #include "serLCDUtils.h"
 #include "sac_sensors.h"
 #include "RTCUtils.h"
-#include "sensors.cpp"
+#include "sensors.h"
 /*
  * RELAY PINS
  */
