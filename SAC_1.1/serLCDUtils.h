@@ -101,19 +101,24 @@ void go_back(void) {
 
 int message_ttl = 0;
 
-void message(char *line1, char *line2) {
+void message(char *line1, char *line2,char* line3,char* line4) {
 
 	lcd.clear();
-//  LCD.setPosition(0,0);
+
 	lcd.setPosition(0, 1);
-//  LCD.print(line1);
+
 	lcd.print(line1);
-//  LCD.setPosition(0,1);
+
 	lcd.setPosition(1, 0);
 	if (line2)
 		lcd.print(line2);
-	lcd.clear();
-	message_ttl = 3;
+	lcd.setPosition(2,0);
+	if(line3)
+		lcd.print(line3);
+	lcd.setPosition(3,0);
+	if(line4)
+		lcd.print(line4);
+
 }
 
 void print_time(int minutes_since_midnight);
