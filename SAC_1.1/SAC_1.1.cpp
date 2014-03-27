@@ -107,8 +107,6 @@ void setup_arduino()
 	  pinMode(BUTTON_ENTER_PIN, INPUT);
 	  pinMode(BUTTON_DOWN_PIN, INPUT);
 
-	  seriallcd.display();
-
 	  //Water Flow Sensor initializing
 	  pinMode(hallsensor, INPUT); //initializes digital pin 2 as an input
 	  attachInterrupt(0, rpm, RISING); //and the interrupt is attached
