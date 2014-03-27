@@ -101,7 +101,7 @@ void go_back(void) {
 
 int message_ttl = 0;
 
-void message(char *line1, char *line2,char* line3,char* line4) {
+void message(char *line1, char *line2,char* line3="",char* line4="") {
 
 	lcd.clear();
 
