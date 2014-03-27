@@ -9,11 +9,22 @@
 #define SENSORS_H_
 
 
-
+/*
+ * Enum Type for the Flow Size Diameter
+ */
 enum _FLOW_SIZE{
-	FLOW_SIZE_16,
-	FLOW_SIZE_32,
-	FLOW_SIZE_48
+	/*
+	 * 16 Cm Diameter
+	 */
+	FLOW_SIZE_16=16,
+	/*
+	 * 32 cm Diameter
+	 */
+	FLOW_SIZE_32=32,
+	/*
+	 * 48 cm Diameter
+	 */
+	FLOW_SIZE_48=48
 };
 
 // Define min and max hum for soil (MOISTURE).
@@ -35,14 +46,7 @@ typedef struct {
  * This Struct store all the information for the current state.
  */
 typedef struct {
-	/*
-	 * current time with format HH:MM:SS
-	 */
-	char * time;
-	/*
-	 * current date with format DD/MM/YYYY
-	 */
-	char * date;
+
 	/**
 	 * the moisture target
 	 */

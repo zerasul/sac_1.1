@@ -48,6 +48,13 @@ State Sensors::read_sensors() {
 	sensors_values.cached_flowvolume+=curr_flowrate/60000;//FlowRate(L/m) to FlowRate(m3/s).
 
 	/* set the state */
+	current_state.moisture_MAX=sensors_values.cached_maxmoisture;
+	current_state.moisture_MIN=sensors_values.cached_minmoisture;
+	current_state.consumption=sensors_values.cached_flowvolume;
+	current_state.current_temps=sensors_values.cached_temperature;
+	current_state.moisture_target=sensors_values.cached_moisture;
+	current_state.temps_max=sensors_values.cached_tempmax;
+	current_state.temps_min=sensors_values.cached_tempmin;
 
 	return current_state;
 }
