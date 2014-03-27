@@ -12,7 +12,6 @@
 
 Sensors::Sensors(float moisture_min,float moisture_max, float temps_min,float temps_max,_FLOW_SIZE flow_diameter) {
 
-
 	sensors_values.cached_maxmoisture = moisture_min;
 	sensors_values.cached_minmoisture = moisture_max;
 
