@@ -5,7 +5,7 @@
  *      Author: dcuevas
  */
 /*
- * sac_sensors.h: This file contains all the functions for reading the Real Time Clock
+ * RTCUtils.h: This file contains all the functions for reading the Real Time Clock
  *
  *  Created on: 16/03/2014
  *      Author: David Cuevas

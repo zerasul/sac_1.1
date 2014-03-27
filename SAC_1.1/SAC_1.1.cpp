@@ -75,7 +75,7 @@ and Adrian from Artesanos Industriales del Sur.
 // Pin for water tank nivel sensor (WTS).
 #define WTS_PIN A2
 
-void  message(char *line1, char *line2);
+void  message(char *line1, char *line2, char *line3, char *line4);
 
 /* global variables, containing this loop iterations sensor readings */
 /* Caching some initial reading for sensors */
