@@ -86,7 +86,10 @@ unsigned char read_ahts_dat() {
   }
   return result;
 }
-
+boolean readFieldCapacity(){
+	//TODO: Read Field Capacity Sensor.
+	return true;
+}
 // Function to process AHTS data and read it.
 // datas is i/o parameter with [ humidity, temperature ].
 void aths_read_data(float *hum_out, float *temp_out) {
@@ -232,12 +235,13 @@ float getTemp(){
 }
 
 #define watering_time = 60;
-double getWater_consumption(int waterflow_diameter double watering_time){
-	double water_consumption = waterflow_diameter * watering_time;
-	return water_consumption;
-}
+
 boolean getWaterLevel(){
-	//TODO
+
+	int WaterLevel=analogRead(WTS_PIN);
+	int WaterUp=map(WaterLevel,0,1023,0,1);
+	//Note When We Want analog Water results, change map function
+	return WaterUp>0;
 }
 
 

@@ -40,6 +40,7 @@ typedef struct {
   float cached_minmoisture;
   float cached_maxmoisture;
   int cached_waterFlowdiameter;
+  boolean cached_fieldCapacity;
   char * cached_lastWaterEvent;
 } cached_sensors;
 /*
@@ -80,12 +81,19 @@ typedef struct {
 	 */
 	float consumption;
 
-}State;
+	boolean field_capacity;
 
+}State;
+/*
+ * This class contains the information about the use of the sensors of SAC.
+ * This class contains a cached state of all the sensors.
+ */
 class Sensors {
 public:
+
 	Sensors(float,float,float,float,_FLOW_SIZE);
 	virtual ~Sensors();
+	void update_sensors();
 	State read_sensors();
 private:
 	cached_sensors sensors_values;

@@ -16,7 +16,7 @@
 #include "DS1307RTC.h"
 #include "Time.h"
 #include "Wire.h"
-tmElements_t tm;
+
 
 
 int RTCread(tmElements_t* tm){
@@ -50,21 +50,50 @@ int getMonth(tmElements_t tm){
 int getYear(tmElements_t tm){
 	return tm.Year;
 }
-char* getTime(){
+char* getTime(tmElements_t tm){
 	char* time = "";
-	char* strcpy(time, tm.Hour);
-	char* strcpy(time, ":");
-	char* strcpy(time, tm.Minute);
+	time =strcpy(time, tm.Hour);
+	time= strcpy(time, ":");
+	time= strcpy(time, tm.Minute);
 	return time;
 }
-char* getDate(){
+
+char* getDate(tmElements_t tm){
 	char* date = "";
-	char* strcpy(date, tm.Day);
-	char* strcpy(date, "/");
-	char* strcpy(date, tm.Month);
-	char* strcpy(date, "/");
-	char* strcpy(date, tm.Year);
+	date=strcpy(date, tm.Day);
+	date=strcpy(date, "/");
+	date=strcpy(date, tm.Month);
+	date=strcpy(date, "/");
+	date= strcpy(date, tm.Year);
 	return date;
 }
+char * getDateTime(tmElements_t tm){
+	char * dateTime="";
+	dateTime=strcpy(dateTime,getDate(tm));
+	dateTime=strcpy(dateTime," ");
+	dateTime=strcpy(dateTime,getTime(tm));
+	return dateTime;
+}
+tmElements_t getTimeElement(char * timeDate){
+	tmElements_t tm;
+	char * date;
+	char * time;
+	char* aux=strstr(timeDate," ");
+	 date= timeDate-date;
 
+}
+/*
+ * Get the seconds Between two timeElements.
+ *
+ * Param time1: First Time
+ * Param time2: Second Time
+ *
+ * return: Seconds Between the two dates
+ */
+long getSecondsBetween(tmElements_t time1,tmElements_t time2){
+	long seconds1= time1.Hour*3600 + time1.Minute*60+time1.Second;
+	long seconds2 = time2.Hour*3600 + time2.Minute*60+time2.Second;
+
+	return seconds2-seconds1;
+}
 
